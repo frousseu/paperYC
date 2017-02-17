@@ -68,7 +68,9 @@ for(i in 1:46){
 		
 		#par(new=FALSE)
 		pie(y$nbvisperso,init.angle=90,labels="",col=c("black","white"),lwd=0.1)
-		if(all(y$abreuv%in%forest)){rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col=gray(0,0.15),border=NA)}
+		if(all(y$abreuv%in%forest)){rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col=gray(0,0.15),border=NA,density=10)}
+		par(new=TRUE)
+		pie(y$nbvisperso,init.angle=90,labels="",col=c("black","white"),lwd=0.1)
 	}
 	 
 	#text(0,0,sum(y$nbvisperso),col="black",cex=1.5)
@@ -76,10 +78,16 @@ for(i in 1:46){
 	#pie(y$bague,init.angle=90,labels="",col=c("blue","red"))}
 	if(i==46){
 		plot(0,0,col="black",xaxt="n",yaxt="n",xlab="",ylab="",type="n",bty="n")
-		text(-0.25,0.25,"Males",col="black",cex=1.8)
-		points(0.75,0.25,col="black",cex=5,pch=16)
-		text(-0.25,-0.25,"Females",col="black",cex=1.8)
-		points(0.75,-0.25,col="black",cex=5,pch=21)
+		text(-0.25,0.50,"Males",col="black",cex=1.8)
+		points(0.75,0.50,col="black",cex=5,pch=16)
+		text(-0.25,0.25,"Females",col="black",cex=1.8)
+		points(0.75,0.25,col="black",cex=5,pch=21)
+		
+		text(-0.25,-0.25,"Fields/Fallows",col="black",cex=1.8)
+		points(0.75,-0.25,col="black",cex=5,pch=22)
+		text(-0.25,-0.50,"Forests",cex=1.8)
+		points(0.75,-0.50,col="black",cex=5,pch=22,density=22)
+		rect(0.65,-0.44,0.85,-0.56,col=gray(0,0.15),border=NA,density=20)
 		#text(0,-0.75,paste("No. of visits=",scrap),cex=1.8,col="black")
 	}
 }
