@@ -1,6 +1,8 @@
 library(data.table)
 library(lme4)
 library(AICcmodavg)
+library(lqmm)
+library(quantreg)
 
 #############################################
 ### piecharts
@@ -169,7 +171,11 @@ i9<- (lmer(log(sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.
 #### AIC avec REML=F
 #### modavg avec REML=T
 
+#q1<- lqmm(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature,random=~1,group=bague, data=v,tau=0.9,na.action=na.omit)
 
+q1<- rq(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature,data=v,tau=0.9,na.action=na.omit)
+
+q2<- rq(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature,data=v,tau=0.1,na.action=na.omit)
 
 
 ##################################################################################
@@ -303,6 +309,8 @@ newdat2[,"nbvisdperso"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p<-as.data.frame(modavgPred(model,newdat=newdat2,type="response")$matrix.output)
 #lines(exp(p$mod.avg.pred)~x, lty=1, lwd=2)
+lines(exp(predict(q1,newdat2))~x,col="red")
+lines(exp(predict(q2,newdat2))~x,col="red")
 polygon(c(x,rev(x)),exp(c(p$lower,rev(p$upper))),border=NA,col=colm)
 newdat2[,"sexe1"]<-as.factor("5")
 p<-as.data.frame(modavgPred(model,newdat=newdat2,type="response")$matrix.output)
