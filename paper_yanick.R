@@ -3,6 +3,7 @@ library(lme4)
 library(AICcmodavg)
 library(lqmm)
 library(quantreg)
+library(TeachingDemos)
 
 #############################################
 ### piecharts
@@ -98,10 +99,12 @@ dev.off()
 ### Fig 5
 #############################################
 
-subplotlim<-function(){
+subplotlim<-function(p=0.3,inset=c(0.04,0.05)){
   l<-par("usr")
-  x<-c(l[2]-(l[2]-l[1])*0.25,l[2])
-  y<-c(l[4]-(l[4]-l[3])*0.25,l[4])
+  sx<-(l[2]-l[1])*p
+  sy<-(l[4]-l[3])*p
+  x<-c(l[2]-sx,l[2])-(sx/p)*p*inset[1]
+  y<-c(l[4]-sy,l[4])-(sy/p)*p*inset[2]
   list(x=x,y=y)
 }
 
@@ -241,9 +244,10 @@ newdat<-data.frame(
 )
 
 
+
 png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig5.png",width=6.5,height=5,units="in",res=500,pointsize=5)
 
-par(mfrow=c(2,2),oma=c(0,1,0,0))
+par(mfrow=c(2,2),oma=c(0,0,0,0),mar=c(4.5,5.5,1,1))
 
 colm<-gray(0,0.50)
 colf<-gray(0,0.20)
@@ -260,13 +264,13 @@ julien<- seq(142,248, by=10)
 f<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*(julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*(julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
 m<- 7.88650  -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*(julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
 
-plot(exp(f)~julien,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Julian date",cex.lab=1.5,cex.axis=1.5, type="n",yaxt="n")
+plot(exp(f)~julien,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Julian date",cex.lab=2,cex.axis=2, type="n",yaxt="n")
 #lines(exp(f)~julien, lty=1, lwd=3,col="red")
 #lines(exp(m)~julien, lty=3, lwd=3,col="red")
 points(v$julien,exp(log(v$sd90)),col=colp)
 legend("topleft",c("a)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
 legend("topleft",c("Male","Female"),inset=c(0.2,0),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
-axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=1.5)
+axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
 
 # modavgpred
 x<-seq(142,248, by=10)
@@ -282,23 +286,25 @@ p2<-as.data.frame(modavgPred(model,newdat=newdat2,type="response")$matrix.output
 polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
-  plot(exp(f)~julien,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="FT",cex.lab=1,cex.axis=1,type="n",yaxt="n")
+  par(mgp=c(2,1,0))
+  plot(exp(f)~julien,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="Julian date",cex.lab=1,cex.axis=1,type="n",yaxt="n")
   points(v$julien,exp(log(v$sd90)),col=colp2,cex=0.7)
   polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
   polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
-  lab<-pretty(ylim2)/1000;lab[length(lab)]<-""
+  lab<-pretty(ylim2)/1000#;lab[length(lab)]<-""
   axis(2,at=pretty(ylim2),label=lab,las=2,cex.axis=1)
+  par(mgp=c(3,1,0))
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
 
 ### temperature
 temperature<-seq(7,27, by=1)
 yy<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*(temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*(temperature)*mean(v$pluie)
-plot(exp(yy)~temperature,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Temperature (\u00B0C)",cex.lab=1.5,cex.axis=1.5, type="n",yaxt="n")
+plot(exp(yy)~temperature,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Temperature (\u00B0C)",cex.lab=2,cex.axis=2, type="n",yaxt="n")
 #lines(exp(yy)~temperature, lwd=3,col="red")
 legend("topleft",c("b)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
 points(v$temperature,exp(log(v$sd90)),col=colp)
-axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=1.5)
+axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
 
 yymax<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*min(temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*min(temperature)*mean(v$pluie)
 yymin<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*max(temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*max(temperature)*mean(v$pluie)
@@ -319,23 +325,25 @@ p2<-as.data.frame(modavgPred(model,newdat=newdat2,type="response")$matrix.output
 polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
-  plot(exp(yy)~temperature,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="FT",cex.lab=1,cex.axis=1,type="n",yaxt="n")
+  par(mgp=c(2,1,0))
+  plot(exp(yy)~temperature,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="Temperature (\u00B0C)",cex.lab=1,cex.axis=1,type="n",yaxt="n")
   points(v$temperature,exp(log(v$sd90)),col=colp2,cex=0.7)
   polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
   polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
-  lab<-pretty(ylim2)/1000;lab[length(lab)]<-""
+  lab<-pretty(ylim2)/1000#;lab[length(lab)]<-""
   axis(2,at=pretty(ylim2),label=lab,las=2,cex.axis=1)
+  par(mgp=c(3,1,0))
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
 
 #nbvisdperso
 nbvisdperso<-seq(0,1, by=0.05)
 yy<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*(nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
-plot(exp(yy)~nbvisdperso,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Spatial concentration",cex.lab=1.5,cex.axis=1.5, type="n",yaxt="n")
+plot(exp(yy)~nbvisdperso,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Spatial concentration",cex.lab=2,cex.axis=2, type="n",yaxt="n")
 #lines(exp(yy)~nbvisdperso, lwd=3,col="red")
 legend("topleft",c("c)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
 points(v$nbvisdperso,exp(log(v$sd90)),col=colp)
-axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=1.5)
+axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
 
 yymin<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*min(nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
 yymax<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*max(nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
@@ -356,22 +364,24 @@ p2<-as.data.frame(modavgPred(model,newdat=newdat2,type="response")$matrix.output
 polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
-  plot(exp(yy)~nbvisdperso,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="FT",cex.lab=1,cex.axis=1,type="n",yaxt="n")
+  par(mgp=c(2,1,0))
+  plot(exp(yy)~nbvisdperso,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="Spatial concentration",cex.lab=1,cex.axis=1,type="n",yaxt="n")
   points(v$nbvisdperso,exp(log(v$sd90)),col=colp2,cex=0.7)
   polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
   polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
-  lab<-pretty(ylim2)/1000;lab[length(lab)]<-""
+  lab<-pretty(ylim2)/1000#;lab[length(lab)]<-""
   axis(2,at=pretty(ylim2),label=lab,las=2,cex.axis=1)
+  par(mgp=c(3,1,0))
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
 ## global
 global<-seq(0,1, by=0.05)
 yy<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*(global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
-plot(exp(yy)~global,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="FT", cex.lab=1.5,cex.axis=1.5, type="n",yaxt="n")
+plot(exp(yy)~global,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="FT", cex.lab=2,cex.axis=2, type="n",yaxt="n")
 #lines(exp(yy)~global, lwd=3,col="red")
 legend("topleft",c("d)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
 points(v$global,exp(log(v$sd90)),col=colp)
-axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=1.5)
+axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
 
 yymin<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*min(global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
 yymax<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*max(global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
@@ -392,12 +402,14 @@ p2<-as.data.frame(modavgPred(model,newdat=newdat2,type="response")$matrix.output
 polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
+  par(mgp=c(2,1,0))
   plot(exp(yy)~global,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="FT",cex.lab=1,cex.axis=1,type="n",yaxt="n",bg="blue")
   points(v$global,exp(log(v$sd90)),col=colp2,cex=0.7)
   polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
   polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
-  lab<-pretty(ylim2)/1000;lab[length(lab)]<-""
+  lab<-pretty(ylim2)/1000#;lab[length(lab)]<-""
   axis(2,at=pretty(ylim2),label=lab,las=2,cex.axis=1)
+  par(mgp=c(3,1,0))
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
 dev.off()
