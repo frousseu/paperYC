@@ -468,7 +468,8 @@ t9<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ annee1+ julien+ (1|bague),data=v, 
 #! ex: model<-c(model1,model2,model3,...)
 
 
-model<-c(t1,t2,t3,t4,t5,t6,t7,t8,t9)
+model<-c(t1=t1,t2=t2,t3=t3,t4=t4,t5=t5,t6=t6,t7=t7,t8=t8,t9=t9)
+aictab(model)
 #model<-c(g1,g2,g3,g4,g5,g6,g7,g8,g9)
 #model<-c(s1,s2,s3,s4,s5)
 #model<-c(c1,c2,c3,c4)
@@ -695,6 +696,74 @@ polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 dev.off()
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#################################################
+### extract from yanick
+##############################################################################
+##############################################################################
+##########################################################################
+##  Modelisation de l indice global
+#### ne converge pas avec tcompGlob, de plus,  cor(v$nbviscompGlob,v$tcompGlob)= 0.8701967  trop correle
+####   dbfinal_1mars2010.txt == base de donnees final pour 2007 et 2008 
+library(lme4)
+v<-read.table("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/dbfinal_1mars2010.txt", header=T, stringsAsFactors=F)
+sexe1<-as.factor(v$sexe)
+annee1<-as.factor(v$annee)
+v<-cbind(v,sexe1,annee1)
+
+
+g1<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob + sexe1:moy_pond_trouee_Global + sexe1:moy_pond_gauli_Global + sexe1:moy_pond_arbre_Global+ sexe1:moy_pond_fleur_Global+ sexe1:julien+ pluie:temperature+ (1|bague),data=v, na.action=na.omit,family=binomial))
+g2<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob+ sexe1:julien + pluie:temperature+(1|bague),data=v, na.action=na.omit,family=binomial))
+g3<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + gen.mst + nbviscompGlob + nbabreuvGlob+ sexe1:julien+pluie:temperature+(1|bague),data=v, na.action=na.omit,family=binomial))
+g4<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague) , data=v,na.action=na.omit, family=binomial))
+## avec variables abiotiques   Pas d interactions possible entre pluie et annee : false convergence
+g5<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  temperature+ pluie+  pluie:temperature+  julien+  annee1 +(1|bague),data=v, na.action=na.omit, family=binomial))
+## avec variables du paysages
+g6<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global +annee1+ julien+(1|bague),data=v, na.action=na.omit, family=binomial))
+## avec variables rattachees aux mouvements et traplines
+g7<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  gen.mst+ nbvisdpersoMAX+ nbabreuvGlob + annee1+ julien+ (1|bague),data=v, na.action=na.omit, family=binomial))
+## avec variables reliees aux a la presence des competiteurs # pas d interaction avec annee ou julien possible false convergence
+g8<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  nbviscompGlob+ annee1 + julien +(1|bague),data=v, na.action=na.omit, family=binomial))
+g9<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ annee1+ julien+ (1|bague),data=v, na.action=na.omit,family=binomial))
+
+# avec REML =T pour avoir les bons coef
+gg<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob + sexe1:moy_pond_trouee_Global + sexe1:moy_pond_gauli_Global + sexe1:moy_pond_arbre_Global+ sexe1:moy_pond_fleur_Global+ sexe1:julien+ pluie:temperature+ (1|bague),data=v, na.action=na.omit,family=binomial))
+
+model<-c(g1=g1,g2=g2,g3=g3,g4=g4,g5=g5,g6=g6,g7=g7,g8=g8,g9=g9)
+aictab(model)
+#model<-c(g1,g2,g3,g4,g5,g6,g7,g8,g9)
+#model<-c(s1,s2,s3,s4,s5)
+#model<-c(c1,c2,c3,c4)
+# Tableau AICc pour lmer
+Modele <- c(1:length(model))
+Deviance<-sapply(model,function(i) deviance(i))
+# indiquer le nombre de param?tres fixes dans chacun de mes mod?les
+fixed.par<-sapply(model,function(i) length(fixef(i)))
+# indiquer le nombre de composantes al?atoires dans chacun de mes mod?les
+random.components<-sapply(model,function(i) length(ranef(i)))
+K <- fixed.par+random.components
+n <- length(fitted(g1))
+mAIC <- Deviance+2*K
+mAICc <- mAIC+2*K*(K+1)/(n-K-1)
+deltai <- mAICc-min(mAICc)
+wi <- round(exp(-0.5*deltai)/sum(exp(-0.5*deltai)), 3)
+tableau_lmer1 <- cbind(Modele, Deviance, K, mAIC, mAICc, deltai, wi)
+tableau_lmer1
 
 
 
