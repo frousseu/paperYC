@@ -510,7 +510,7 @@ newdat<-data.frame(
 
 
 
-png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig4.png",width=6.5,height=4,units="in",res=500,pointsize=5)
+png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig6.png",width=6.5,height=4,units="in",res=500,pointsize=5)
 
 ###### Figures illustrant l effet des covariables sur l indice global
 library(boot)
@@ -522,175 +522,102 @@ colm<-gray(0,0.50)
 colf<-gray(0,0.20)
 colp<-gray(0,0.15)
 
-cbind(v$nb0, v$long.dia - v$nb0)
 val<-v$nb0/v$long.dia
 
-####################
-moyarbre<-seq(0,max(v$moy_pond_arbre_Global),1)
-f<- 8.816e-01 + 2.507e+00 + mean(v$masse)*(-3.486e-01) + mean(v$parasites)*8.140e-03 + 1.312e-01+ mean(v$julien)*(-1.604e-03)+ mean(v$nbvisdpersoMAX)*-2.003e+00 + mean(v$temperature)*(-1.753e-03) + mean(v$pluie)*(-6.578e-03) + (mean(v$nbabreuvGlob)*2.351e-01) + mean(v$moy_pond_trouee_Global)*1.160e+00 + moyarbre*4.693e-02 + mean(v$moy_pond_gauli_Global)*3.034e-02 + mean(v$moy_pond_fleur_Global)*(3.496e-04) + mean(v$gen.mst)*(-1.025e-03) + mean(v$nbviscompGlob)*(-2.180e-04) -1.503e+00*mean(v$moy_pond_trouee_Global) -5.038e-02*mean(v$moy_pond_gauli_Global) -4.589e-02*moyarbre -2.559e-03*mean(v$moy_pond_fleur_Global) -1.752e-03*mean(v$julien) +2.989e-04*mean(v$temperature)*mean(v$pluie)
-m<- 8.816e-01 + mean(v$masse)*(-3.486e-01) + mean(v$parasites)*8.140e-03 + 1.312e-01+ mean(v$julien)*(-1.604e-03)+ mean(v$nbvisdpersoMAX)*-2.003e+00 + mean(v$temperature)*(-1.753e-03) + mean(v$pluie)*(-6.578e-03) + (mean(v$nbabreuvGlob)*2.351e-01) + mean(v$moy_pond_trouee_Global)*1.160e+00 + moyarbre*4.693e-02 + mean(v$moy_pond_gauli_Global)*3.034e-02 + mean(v$moy_pond_fleur_Global)*(3.496e-04) + mean(v$gen.mst)*(-1.025e-03) + mean(v$nbviscompGlob)*(-2.180e-04) +2.989e-04*mean(v$temperature)*mean(v$pluie)
-#plot(inv.logit(f)~moyarbre,ylim=c(0,1), ylab="indice global",xlab="densit? arbres",cex.lab=1.5,cex.axis=1.5)
-plot(inv.logit(f)~moyarbre,ylim=c(0,1), ylab="FT",xlab="Tree density",cex.lab=1.8,cex.axis=2,type="n")
+#################### tree density
+x<-seq(min(v$moy_pond_arbre_Trap),max(v$moy_pond_arbre_Trap),length.out=5)
+plot(x,seq_along(x),ylim=c(0,1), ylab="ST",xlab="Tree density",cex.lab=1.8,cex.axis=2,type="n")
 points(v$moy_pond_arbre_Trap,val,col=colp)
-#lines(inv.logit(m)~moyarbre, lty=1, lwd=3.5,col="red")
-#lines(inv.logit(f)~moyarbre, lty=3, lwd=3.5,col="red")
 legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
 legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
-
 ### modavgpred
-x<-seq(0,max(v$moy_pond_arbre_Trap),1)
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"moy_pond_arbre_Trap"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=1, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-
 newdat2[,"sexe1"]<-as.factor("5")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=3, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 
-##################
-moytrouee<-seq(0,1,0.05)
-f<- 8.816e-01 + 2.507e+00 + mean(v$masse)*(-3.486e-01) + mean(v$parasites)*8.140e-03 + 1.312e-01+ mean(v$julien)*(-1.604e-03)+ mean(v$nbvisdpersoMAX)*-2.003e+00 + mean(v$temperature)*(-1.753e-03) + mean(v$pluie)*(-6.578e-03) + (mean(v$nbabreuvGlob)*2.351e-01) + moytrouee*1.160e+00 + mean(v$moy_pond_arbre_Global)*4.693e-02 + mean(v$moy_pond_gauli_Global)*3.034e-02 + mean(v$moy_pond_fleur_Global)*(3.496e-04) + mean(v$gen.mst)*(-1.025e-03) + mean(v$nbviscompGlob)*(-2.180e-04) -1.503e+00*moytrouee -5.038e-02*mean(v$moy_pond_gauli_Global) -4.589e-02*mean(v$moy_pond_arbre_Global) -2.559e-03*mean(v$moy_pond_fleur_Global) -1.752e-03*mean(v$julien) +2.989e-04*mean(v$temperature)*mean(v$pluie)
-m<- 8.816e-01 + mean(v$masse)*(-3.486e-01) + mean(v$parasites)*8.140e-03 + 1.312e-01+ mean(v$julien)*(-1.604e-03)+ mean(v$nbvisdpersoMAX)*-2.003e+00 + mean(v$temperature)*(-1.753e-03) + mean(v$pluie)*(-6.578e-03) + (mean(v$nbabreuvGlob)*2.351e-01) + moytrouee*1.160e+00 + mean(v$moy_pond_arbre_Global)*4.693e-02 + mean(v$moy_pond_gauli_Global)*3.034e-02 + mean(v$moy_pond_fleur_Global)*(3.496e-04) + mean(v$gen.mst)*(-1.025e-03) + mean(v$nbviscompGlob)*(-2.180e-04) +2.989e-04*mean(v$temperature)*mean(v$pluie)
-#plot(inv.logit(f)~moytrouee,ylim=c(0,1), ylab="indice global",xlab="ouverture canop?e",cex.lab=1.5,cex.axis=1.5)
-plot(inv.logit(f)~moytrouee,ylim=c(0,1), ylab="FT",type="n",xlab="Forest gap",cex.lab=1.8,cex.axis=2)
+################## forest gaps
+x<-seq(min(v$moy_pond_trouee_Trap),max(v$moy_pond_trouee_Trap),length.out=5)
+plot(x,seq_along(x),ylim=c(0,1), ylab="ST",type="n",xlab="Forest gap",cex.lab=1.8,cex.axis=2)
 points(v$moy_pond_trouee_Trap,val,col=colp)
-#lines(inv.logit(m)~moytrouee, lty=1, lwd=3.5,col="red")
-#lines(inv.logit(f)~moytrouee, lty=3, lwd=3.5,col="red")
 legend("topright",c("b)"),lty=c(1,3),bty="n", col=F, cex=2)
-#legend(0.3,0.9,c("Male","Female"),lty=c(1,3),lwd=3, bty="n",col=T, cex=2)
-
 ### modavgpred
-x<-seq(0,max(v$moy_pond_trouee_Trap),0.05)
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"moy_pond_trouee_Trap"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=1, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-
 newdat2[,"sexe1"]<-as.factor("5")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=3, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 
-##################
-moyfleur<-seq(0,max(v$moy_pond_fleur_Glob),10)
-f<- 8.816e-01 + 2.507e+00 + mean(v$masse)*(-3.486e-01) + mean(v$parasites)*8.140e-03 + 1.312e-01+ mean(v$julien)*(-1.604e-03)+ mean(v$nbvisdpersoMAX)*-2.003e+00 + mean(v$temperature)*(-1.753e-03) + mean(v$pluie)*(-6.578e-03) + (mean(v$nbabreuvGlob)*2.351e-01) + mean(v$moy_pond_trouee_Global)*1.160e+00 + mean(v$moy_pond_arbre_Global)*4.693e-02 + mean(v$moy_pond_gauli_Global)*3.034e-02 + moyfleur*(3.496e-04) + mean(v$gen.mst)*(-1.025e-03) + mean(v$nbviscompGlob)*(-2.180e-04) -1.503e+00*mean(v$moy_pond_trouee_Global) -5.038e-02*mean(v$moy_pond_gauli_Global) -4.589e-02*mean(v$moy_pond_arbre_Global) -2.559e-03*moyfleur -1.752e-03*mean(v$julien) +2.989e-04*mean(v$temperature)*mean(v$pluie)
-m<- 8.816e-01 + mean(v$masse)*(-3.486e-01) + mean(v$parasites)*8.140e-03 + 1.312e-01+ mean(v$julien)*(-1.604e-03)+ mean(v$nbvisdpersoMAX)*-2.003e+00 + mean(v$temperature)*(-1.753e-03) + mean(v$pluie)*(-6.578e-03) + (mean(v$nbabreuvGlob)*2.351e-01) + mean(v$moy_pond_trouee_Global)*1.160e+00 + mean(v$moy_pond_arbre_Global)*4.693e-02 + mean(v$moy_pond_gauli_Global)*3.034e-02 + moyfleur*(3.496e-04) + mean(v$gen.mst)*(-1.025e-03) + mean(v$nbviscompGlob)*(-2.180e-04) +2.989e-04*mean(v$temperature)*mean(v$pluie)
-#plot(inv.logit(f)~moyfleur,ylim=c(0,1), ylab="indice global", xlab="densit? fleurs",cex.lab=1.5,cex.axis=1.5)
-plot(inv.logit(f)~moyfleur,ylim=c(0,1), ylab="FT", xlab="Flower density (nb/m\U00B2)",cex.lab=1.8,cex.axis=2,type="n")
+################## flower density
+x<-seq(min(v$moy_pond_fleur_Trap),max(v$moy_pond_fleur_Trap),length.out=5)
+plot(x,seq_along(x),ylim=c(0,1), ylab="ST", xlab="Flower density (nb/m\U00B2)",cex.lab=1.8,cex.axis=2,type="n")
 points(v$moy_pond_fleur_Trap,val,col=colp)
-#lines(inv.logit(m)~moyfleur, lty=1, lwd=3.5,col="red")
-#lines(inv.logit(f)~moyfleur, lty=3, lwd=3.5,col="red")
 legend("topright",c("c)"),lty=c(1,3),bty="n", col=F, cex=2)
-#legend(100,0.9,c("Male","Female"),lty=c(1,3),lwd=3, bty="n",col=T, cex=2)        #,
-
 ### modavgpred
-x<-seq(0,max(v$moy_pond_fleur_Trap),10)
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"moy_pond_fleur_Trap"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=1, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-
 newdat2[,"sexe1"]<-as.factor("5")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=3, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 
-
-########################
-nbvisdpersoMAX<-seq(0,1,0.05)
-xx<- 8.816e-01 + 2.507e+00 + mean(v$masse)*(-3.486e-01) + mean(v$parasites)*8.140e-03 + 1.312e-01+ mean(v$julien)*(-1.604e-03)+ (nbvisdpersoMAX*-2.003e+00)+ mean(v$temperature)*(-1.753e-03) + mean(v$pluie)*(-6.578e-03) + (mean(v$nbabreuvGlob)*2.351e-01) + mean(v$moy_pond_trouee_Global)*1.160e+00 + mean(v$moy_pond_arbre_Global)*4.693e-02 + mean(v$moy_pond_gauli_Global)*3.034e-02 + mean(v$moy_pond_fleur_Global)*(3.496e-04) + mean(v$gen.mst)*(-1.025e-03) + mean(v$nbviscompGlob)*(-2.180e-04) -1.503e+00*mean(v$moy_pond_trouee_Global) -5.038e-02*mean(v$moy_pond_gauli_Global) -4.589e-02*mean(v$moy_pond_arbre_Global) -2.559e-03*mean(v$moy_pond_fleur_Global) -1.752e-03*mean(v$julien) +2.989e-04*mean(v$temperature)*mean(v$pluie)
-plot(inv.logit(xx)~nbvisdpersoMAX,ylim=c(0,1),ylab="FT", xlab="Spatial concentration",cex.lab=1.8,cex.axis=2,type="n")
-#plot(inv.logit(xx)~nbvisdpersoMAX,ylim=c(0,1), ylab="indice global",cex.lab=1.5,cex.axis=1.5)
+######################## spatial concentration
+x<-seq(min(v$nbvisdpersoMAX),max(v$nbvisdpersoMAX),length.out=5)
+plot(x,seq_along(x),ylim=c(0,1),ylab="ST", xlab="Spatial concentration",cex.lab=1.8,cex.axis=2,type="n")
 points(v$nbvisdpersoMAX,val,col=colp)
-#lines(inv.logit(xx)~nbvisdpersoMAX, lwd=3.5,col="red")
 legend("topright",c("d)"),lty=c(1,3),bty="n", col=F, cex=2)
-
 ### modavgpred
-x<-seq(0,1,0.05)
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"nbvisdpersoMAX"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=1, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-
 newdat2[,"sexe1"]<-as.factor("5")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=3, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 
-
-
-
-############################
-nbabreuv<-c(2:9)
-xx<- 8.816e-01 + 2.507e+00 + mean(v$masse)*(-3.486e-01) + mean(v$parasites)*8.140e-03 + 1.312e-01+ mean(v$julien)*(-1.604e-03)+ (mean(v$nbvisdpersoMAX)*-2.003e+00)+ mean(v$temperature)*(-1.753e-03) + mean(v$pluie)*(-6.578e-03) + (nbabreuv*2.351e-01) + mean(v$moy_pond_trouee_Global)*1.160e+00 + mean(v$moy_pond_arbre_Global)*4.693e-02 + mean(v$moy_pond_gauli_Global)*3.034e-02 + mean(v$moy_pond_fleur_Global)*(3.496e-04) + mean(v$gen.mst)*(-1.025e-03) + mean(v$nbviscompGlob)*(-2.180e-04) -1.503e+00*mean(v$moy_pond_trouee_Global) -5.038e-02*mean(v$moy_pond_gauli_Global) -4.589e-02*mean(v$moy_pond_arbre_Global) -2.559e-03*mean(v$moy_pond_fleur_Global) -1.752e-03*mean(v$julien) +2.989e-04*mean(v$temperature)*mean(v$pluie)
-plot(inv.logit(xx)~nbabreuv,ylim=c(0,1),ylab="FT",xlab="Number of feeders",cex.lab=1.8,cex.axis=2, type="n",xlim=c(2,4))
+############################ number of feeders
+x<-seq(min(v$nbabreuvTrap),max(v$nbabreuvTrap),1)
+plot(x,seq_along(x),ylim=c(0,1),ylab="ST",xlab="Number of feeders",cex.lab=1.8,cex.axis=2, type="n",xlim=c(2,4))
 points(v$nbabreuvTrap,val,col=colp)
-#lines(inv.logit(xx)~nbabreuv, lwd=3.5,col="red")
 legend("topright",c("e)"),lty=c(1,3),bty="n", col=F, cex=2)
-
 ### modavgpred
-x<-2:4
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"nbabreuvTrap"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=1, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-
 newdat2[,"sexe1"]<-as.factor("5")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=3, lwd=2)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 
-
-##############################
-mst<-seq(0,max(v$gen.mst),100)
-y<- 8.816e-01 + 2.507e+00 + mean(v$masse)*(-3.486e-01) + mean(v$parasites)*8.140e-03 + 1.312e-01+ mean(v$julien)*(-1.604e-03)+ mean(v$nbvisdpersoMAX)*-2.003e+00 + mean(v$temperature)*(-1.753e-03) + mean(v$pluie)*(-6.578e-03) + (mean(v$nbabreuvGlob)*2.351e-01) + mean(v$moy_pond_trouee_Global)*1.160e+00 + mean(v$moy_pond_arbre_Global)*4.693e-02 + mean(v$moy_pond_gauli_Global)*3.034e-02 + mean(v$moy_pond_fleur_Global)*(3.496e-04) + mst*(-1.025e-03) + mean(v$nbviscompGlob)*(-2.180e-04) -1.503e+00*mean(v$moy_pond_trouee_Global) -5.038e-02*mean(v$moy_pond_gauli_Global) -4.589e-02*mean(v$moy_pond_arbre_Global) -2.559e-03*mean(v$moy_pond_fleur_Global) -1.752e-03*mean(v$julien) +2.989e-04*mean(v$temperature)*mean(v$pluie)
-#plot(inv.logit(y)~mst,ylim=c(0,1), ylab="indice global",cex.lab=1.5,cex.axis=1.5)
-plot(inv.logit(y)~mst,ylim=c(0,1), ylab="FT", xlab="MST (m)",cex.lab=1.8,cex.axis=2, type="n")
+############################## gen.mst
+x<-seq(min(v$gen.mst),max(v$gen.mst),length.out=5)
+plot(x,seq_along(x),ylim=c(0,1), ylab="ST", xlab="MST (m)",cex.lab=1.8,cex.axis=2, type="n")
 points(v$gen.mst,val,col=colp)
-#lines(inv.logit(y)~mst, lwd=3.5)
 legend("topright",c("f)"),lty=c(1,3),bty="n", col=F, cex=2)
-
 ### modavgpred
-x<-seq(min(v$gen.mst),max(v$gen.mst),100)
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"gen.mst"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=1, lwd=1)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=gray(0,0.50))
-
 newdat2[,"sexe1"]<-as.factor("5")
 p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-#p$mod.avg.pred<-inv.logit(p$mod.avg.pred)
-#lines(p$mod.avg.pred~x, lty=3, lwd=1)
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
   
 
@@ -787,7 +714,7 @@ newdat<-data.frame(
 )
 
 
-png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig6_extra.png",width=6.5,height=4,units="in",res=500,pointsize=5)
+png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig4.png",width=6.5,height=4,units="in",res=500,pointsize=5)
 
 ###### Figures illustrant l effet des covariables sur l indice global
 library(boot)
@@ -802,7 +729,7 @@ colp<-gray(0,0.15)
 val<-v$nbvisINtrap/v$nbvispersotot
 
 #################### tree density
-x<-seq(0,max(v$moy_pond_arbre_Global),length.out=5)
+x<-seq(min(v$moy_pond_arbre_Global),max(v$moy_pond_arbre_Global),length.out=5)
 plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Tree density",cex.lab=1.8,cex.axis=2,type="n")
 points(v$moy_pond_arbre_Global,val,col=colp)
 legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
@@ -818,7 +745,7 @@ p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 #################### forest gap
-x<-seq(0,max(v$moy_pond_trouee_Global),length.out=5)
+x<-seq(min(v$moy_pond_trouee_Global),max(v$moy_pond_trouee_Global),length.out=5)
 plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Forest gap",cex.lab=1.8,cex.axis=2,type="n")
 points(v$moy_pond_trouee_Global,val,col=colp)
 legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
@@ -834,7 +761,7 @@ p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 #################### flower density
-x<-seq(0,max(v$moy_pond_fleur_Global),length.out=5)
+x<-seq(min(v$moy_pond_fleur_Global),max(v$moy_pond_fleur_Global),length.out=5)
 plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Flower density (nb/m\U00B2)",cex.lab=1.8,cex.axis=2,type="n")
 points(v$moy_pond_fleur_Global,val,col=colp)
 legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
@@ -850,7 +777,7 @@ p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 #################### spatial concentration
-x<-seq(0,max(v$nbvisdpersoMAX),length.out=5)
+x<-seq(min(v$nbvisdpersoMAX),max(v$nbvisdpersoMAX),length.out=5)
 plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Spatial concentration",cex.lab=1.8,cex.axis=2,type="n")
 points(v$nbvisdpersoMAX,val,col=colp)
 legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
@@ -866,7 +793,7 @@ p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 #################### nb abreuv
-x<-seq(0,max(v$nbabreuvGlob),1)
+x<-seq(min(v$nbabreuvGlob),max(v$nbabreuvGlob),1)
 plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Number of feeders",cex.lab=1.8,cex.axis=2,type="n")
 points(v$nbabreuvGlob,val,col=colp)
 legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
@@ -882,7 +809,7 @@ p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output
 polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
 #################### nb abreuv
-x<-seq(0,max(v$gen.mst),length.out=5)
+x<-seq(min(v$gen.mst),max(v$gen.mst),length.out=5)
 plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="MST (m)",cex.lab=1.8,cex.axis=2,type="n")
 points(v$gen.mst,val,col=colp)
 legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
