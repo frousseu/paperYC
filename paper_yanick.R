@@ -508,145 +508,51 @@ newdat<-data.frame(
   gen.mst=mean(v$gen.mst)
 )
 
-
-
-png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig6.png",width=6.5,height=4,units="in",res=500,pointsize=5)
-
-###### Figures illustrant l effet des covariables sur l indice global
-library(boot)
-par(mfrow=c(1,2),mar=c(5,6,2,2)) # pour mon seminaire 2
-par(mfrow=c(2,3))
-# les coefs sont ceux des femelles en 2008
-
+################################################
+### ST pred
+################################################
 colm<-gray(0,0.50)
 colf<-gray(0,0.20)
 colp<-gray(0,0.15)
 
 val<-v$nb0/v$long.dia
 
-#################### tree density
-x<-seq(min(v$moy_pond_arbre_Trap),max(v$moy_pond_arbre_Trap),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1), ylab="ST",xlab="Tree density",cex.lab=1.8,cex.axis=2,type="n")
-points(v$moy_pond_arbre_Trap,val,col=colp)
-legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
-legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"moy_pond_arbre_Trap"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
+png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig_extra.png",width=6.5,height=4,units="in",res=500,pointsize=5)
+par(mfrow=c(1,2),mar=c(5,6,2,2)) # pour mon seminaire 2
+par(mfrow=c(2,3))
 
+va<-c("moy_pond_arbre_Trap","moy_pond_trouee_Trap","moy_pond_fleur_Trap","nbvisdpersoMAX","nbabreuvTrap","gen.mst")
+valab<-c("Tree density","Forest gap","Flower density (nb/m\U00B2)","Spatial concentration","Number of feeders","MST (m)")
 
-################## forest gaps
-x<-seq(min(v$moy_pond_trouee_Trap),max(v$moy_pond_trouee_Trap),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1), ylab="ST",type="n",xlab="Forest gap",cex.lab=1.8,cex.axis=2)
-points(v$moy_pond_trouee_Trap,val,col=colp)
-legend("topright",c("b)"),lty=c(1,3),bty="n", col=F, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"moy_pond_trouee_Trap"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
-
-
-################## flower density
-x<-seq(min(v$moy_pond_fleur_Trap),max(v$moy_pond_fleur_Trap),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1), ylab="ST", xlab="Flower density (nb/m\U00B2)",cex.lab=1.8,cex.axis=2,type="n")
-points(v$moy_pond_fleur_Trap,val,col=colp)
-legend("topright",c("c)"),lty=c(1,3),bty="n", col=F, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"moy_pond_fleur_Trap"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
-
-
-######################## spatial concentration
-x<-seq(min(v$nbvisdpersoMAX),max(v$nbvisdpersoMAX),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1),ylab="ST", xlab="Spatial concentration",cex.lab=1.8,cex.axis=2,type="n")
-points(v$nbvisdpersoMAX,val,col=colp)
-legend("topright",c("d)"),lty=c(1,3),bty="n", col=F, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"nbvisdpersoMAX"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
-
-
-############################ number of feeders
-x<-seq(min(v$nbabreuvTrap),max(v$nbabreuvTrap),1)
-plot(x,seq_along(x),ylim=c(0,1),ylab="ST",xlab="Number of feeders",cex.lab=1.8,cex.axis=2, type="n",xlim=c(2,4))
-points(v$nbabreuvTrap,val,col=colp)
-legend("topright",c("e)"),lty=c(1,3),bty="n", col=F, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"nbabreuvTrap"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
-
-
-############################## gen.mst
-x<-seq(min(v$gen.mst),max(v$gen.mst),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1), ylab="ST", xlab="MST (m)",cex.lab=1.8,cex.axis=2, type="n")
-points(v$gen.mst,val,col=colp)
-legend("topright",c("f)"),lty=c(1,3),bty="n", col=F, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"gen.mst"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=gray(0,0.50))
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
-  
+for(i in seq_along(va)){
+  if(any(grep("abreuv",va[i]))){
+    x<-seq(min(v[,va[i]]),max(v[,va[i]]),by=1)
+  }else{
+    x<-seq(min(v[,va[i]]),max(v[,va[i]]),length.out=5)
+  }
+  plot(x,seq_along(x),ylim=c(0,1), ylab="ST",xlab=valab[i],cex.lab=1.8,cex.axis=2,type="n")
+  points(v[,va[i]],val,col=colp)
+  legend("topright",paste0(letters[i],")"),lty=c(1,3),bty="n", col=F, cex=2)
+  if(i==1){legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)}
+  ### modavgpred
+  newdat2<-newdat[rep(1,length(x)),]
+  newdat2[,va[i]]<-x
+  newdat2[,"sexe1"]<-as.factor("4")
+  p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
+  polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
+  newdat2[,"sexe1"]<-as.factor("5")
+  p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
+  polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
+}
 
 dev.off()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #################################################
-### extract from yanick
-##############################################################################
-##############################################################################
-##########################################################################
-##  Modelisation de l indice global
-#### ne converge pas avec tcompGlob, de plus,  cor(v$nbviscompGlob,v$tcompGlob)= 0.8701967  trop correle
-####   dbfinal_1mars2010.txt == base de donnees final pour 2007 et 2008 
+### FT pred
+#################################################
+
 library(lme4)
 v<-read.table("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/dbfinal_1mars2010.txt", header=T, stringsAsFactors=F)
 sexe1<-as.factor(v$sexe)
@@ -714,13 +620,7 @@ newdat<-data.frame(
 )
 
 
-png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig4.png",width=6.5,height=4,units="in",res=500,pointsize=5)
-
 ###### Figures illustrant l effet des covariables sur l indice global
-library(boot)
-par(mfrow=c(1,2),mar=c(5,6,2,2)) # pour mon seminaire 2
-par(mfrow=c(2,3))
-# les coefs sont ceux des femelles en 2008
 
 colm<-gray(0,0.50)
 colf<-gray(0,0.20)
@@ -728,100 +628,47 @@ colp<-gray(0,0.15)
 
 val<-v$nbvisINtrap/v$nbvispersotot
 
-#################### tree density
-x<-seq(min(v$moy_pond_arbre_Global),max(v$moy_pond_arbre_Global),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Tree density",cex.lab=1.8,cex.axis=2,type="n")
-points(v$moy_pond_arbre_Global,val,col=colp)
-legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
-legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"moy_pond_arbre_Global"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
 
-#################### forest gap
-x<-seq(min(v$moy_pond_trouee_Global),max(v$moy_pond_trouee_Global),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Forest gap",cex.lab=1.8,cex.axis=2,type="n")
-points(v$moy_pond_trouee_Global,val,col=colp)
-legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
-legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"moy_pond_trouee_Global"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
+png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig4.png",width=6.5,height=4,units="in",res=500,pointsize=5)
+par(mfrow=c(1,2),mar=c(5,6,2,2)) # pour mon seminaire 2
+par(mfrow=c(2,3))
 
-#################### flower density
-x<-seq(min(v$moy_pond_fleur_Global),max(v$moy_pond_fleur_Global),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Flower density (nb/m\U00B2)",cex.lab=1.8,cex.axis=2,type="n")
-points(v$moy_pond_fleur_Global,val,col=colp)
-legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
-legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"moy_pond_fleur_Global"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
+va<-c("moy_pond_arbre_Global","moy_pond_trouee_Global","moy_pond_fleur_Global","nbvisdpersoMAX","nbabreuvGlob","gen.mst")
+valab<-c("Tree density","Forest gap","Flower density (nb/m\U00B2)","Spatial concentration","Number of feeders","MST (m)")
 
-#################### spatial concentration
-x<-seq(min(v$nbvisdpersoMAX),max(v$nbvisdpersoMAX),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Spatial concentration",cex.lab=1.8,cex.axis=2,type="n")
-points(v$nbvisdpersoMAX,val,col=colp)
-legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
-legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"nbvisdpersoMAX"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
-
-#################### nb abreuv
-x<-seq(min(v$nbabreuvGlob),max(v$nbabreuvGlob),1)
-plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="Number of feeders",cex.lab=1.8,cex.axis=2,type="n")
-points(v$nbabreuvGlob,val,col=colp)
-legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
-legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"nbabreuvGlob"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
-
-#################### nb abreuv
-x<-seq(min(v$gen.mst),max(v$gen.mst),length.out=5)
-plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab="MST (m)",cex.lab=1.8,cex.axis=2,type="n")
-points(v$gen.mst,val,col=colp)
-legend("topright",c("a)"),lty=c(1,3),bty="n", col=F, cex=2)
-legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
-### modavgpred
-newdat2<-newdat[rep(1,length(x)),]
-newdat2[,"gen.mst"]<-x
-newdat2[,"sexe1"]<-as.factor("4")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
-newdat2[,"sexe1"]<-as.factor("5")
-p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
-polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
+for(i in seq_along(va)){
+  if(any(grep("abreuv",va[i]))){
+    x<-seq(min(v[,va[i]]),max(v[,va[i]]),by=1)
+  }else{
+    x<-seq(min(v[,va[i]]),max(v[,va[i]]),length.out=5)
+  }
+  plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab=valab[i],cex.lab=1.8,cex.axis=2,type="n")
+  points(v[,va[i]],val,col=colp)
+  legend("topright",paste0(letters[i],")"),lty=c(1,3),bty="n", col=F, cex=2)
+  if(i==1){legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)}
+  ### modavgpred
+  newdat2<-newdat[rep(1,length(x)),]
+  newdat2[,va[i]]<-x
+  newdat2[,"sexe1"]<-as.factor("4")
+  p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
+  polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colm)
+  newdat2[,"sexe1"]<-as.factor("5")
+  p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
+  polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
+}
 
 dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
