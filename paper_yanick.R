@@ -1,10 +1,12 @@
 library(data.table)
 library(lme4)
 library(AICcmodavg)
+library(MuMIn)
 library(lqmm)
 library(quantreg)
 library(TeachingDemos)
 library(scales)
+library(htmlTable)
 
 #############################################
 ### piecharts
@@ -176,7 +178,12 @@ q2<- rq(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  globa
 
 
 modeli<-list(i1=i1,i2=i2,i3=i3,i4=i4,i5=i5,i6=i6,i7=i7,i8=i8,i9=i9)
-aictab(modeli)
+maSD<-aictab(modeli)
+ma<-model.avg(modeli)
+co<-t(ma$coefficients)
+ci<-confint(ma,full=TRUE)
+paramSD<-cbind(co,ci)
+
 
 
 ##############################################
@@ -430,7 +437,12 @@ t9<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ annee1+ julien+ (1|bague),data=v, 
 
 
 modelt<-c(t1=t1,t2=t2,t3=t3,t4=t4,t5=t5,t6=t6,t7=t7,t8=t8,t9=t9)
-aictab(modelt)
+maST<-aictab(modelt)
+ma<-model.avg(modelt)
+co<-t(ma$coefficients)
+ci<-confint(ma,full=TRUE)
+paramST<-cbind(co,ci)
+
 
 
 ### master data.frame
@@ -526,7 +538,12 @@ g9<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ annee1+ julien
 gg<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob + sexe1:moy_pond_trouee_Global + sexe1:moy_pond_gauli_Global + sexe1:moy_pond_arbre_Global+ sexe1:moy_pond_fleur_Global+ sexe1:julien+ pluie:temperature+ (1|bague),data=v,na.action=na.omit,family=binomial,control=controlglmer))
 
 modelg<-c(g1=g1,g2=g2,g3=g3,g4=g4,g5=g5,g6=g6,g7=g7,g8=g8,g9=g9)
-aictab(modelg)
+maFT<-aictab(modelg)
+ma<-model.avg(modelg)
+co<-t(ma$coefficients)
+ci<-confint(ma,full=TRUE)
+paramFT<-cbind(co,ci)
+
 
 ### master data.frame
 newdat<-with(v,data.frame(
@@ -587,13 +604,60 @@ for(i in seq_along(va)){
 
 dev.off()
 
+#####################################
+### tables productions
+#####################################
 
+### function for viewing as html table to copy paste in word
+print.htmlTable<- function(x, useViewer = TRUE, ...){
+  # Don't use viewer if in knitr
+  if (useViewer &&
+      !"package:knitr" %in% search()){
+    
+    htmlFile <- tempfile(fileext=".html")
+    htmlPage <- paste("<html>",
+                      "<head>",
+                      "<meta http-equiv=\"Content-type\" content=\"text/html;charset=UTF-8\">",
+                      "</head>",
+                      "<body>",
+                      "<div style=\"margin: 0 auto; display: table; margin-top: 1em;\">",
+                      x,
+                      "</div>",
+                      "</body>",
+                      "</html>", sep="\n")
+    cat(htmlPage, file=htmlFile)
+    
+    viewer <- getOption("viewer")
+    if (!is.null(viewer) &&
+        is.function(viewer)){
+      # (code to write some content to the file)
+      viewer(htmlFile)
+    }else{
+      utils::browseURL(htmlFile)
+    }
+  }else{
+    cat(x)
+  }
+}
 
+fix_formula<-function(x){
+  strsplit(as.character(lme4:::nobars(formula(x)))," ~ ")[[3]]  
+}
 
+STFT<-cbind(paramST,paramFT)
+STFT<-apply(STFT,2,format,digits=1,nsmall=1,width=2,trim=FALSE)
+print.htmlTable(htmlTable(STFT))
 
+SD<-apply(paramSD,2,format,digits=1,nsmall=1,width=2,trim=FALSE)
+print.htmlTable(htmlTable(SD))
 
+tabST<-cbind(as.data.frame(maST)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maST)),function(i){fix_formula(modeli[[i]])}))[,c(1,5,2,3,4)]
+tabFT<-cbind(as.data.frame(maFT)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maFT)),function(i){fix_formula(modeli[[i]])}))[,c(1,5,2,3,4)]
+tabSD<-cbind(as.data.frame(maSD)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maSD)),function(i){fix_formula(modeli[[i]])}))[,c(1,5,2,3,4)]
 
-
+print.htmlTable(htmlTable(tabST,rnames=FALSE))
+print.htmlTable(htmlTable(tabFT,rnames=FALSE))
+print.htmlTable(htmlTable(tabSD,rnames=FALSE))
 
 
 
