@@ -146,19 +146,19 @@ controlglmer<-glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=200000))
 
 #J enleve nbabr car trop correlee avec gen.mst. cor =  0.902
 
-i1<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
-i2<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp+  (1|bague) + (1|abreuv), REML=F, data=v, na.action=na.omit))
-i3<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+temperature + pluie + gen.mst + nbviscomp + sexe1:julien+pluie:temperature+(1|bague)+ (1|abreuv), REML=F , data=v, na.action=na.omit))
-i4<- (lmer(log(v$sd90)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague)+ (1|abreuv) , data=v, REML=F, na.action=na.omit))
+i1<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
+i2<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp+  (1|bague) + (1|abreuv), REML=F, data=v2, na.action=na.omit))
+i3<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+temperature + pluie + gen.mst + nbviscomp + sexe1:julien+pluie:temperature+(1|bague)+ (1|abreuv), REML=F , data=v2, na.action=na.omit))
+i4<- (lmer(log(v$sd90)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague)+ (1|abreuv) , data=v2, REML=F, na.action=na.omit))
 ## avec variables abiotiques   Pas d interactions possible entre pluie et annee : false convergence
-i5<- (lmer(log(v$sd90) ~  temperature+ pluie+ temperature: pluie+  julien+  annee1 +(1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i5<- (lmer(log(v$sd90) ~  temperature+ pluie+ temperature: pluie+  julien+  annee1 +(1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
 ## avec variables du paysages
-i6<- (lmer(log(v$sd90) ~  fleur +annee1+ julien+ sexe1:fleur + sexe1:julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i6<- (lmer(log(v$sd90) ~  fleur +annee1+ julien+ sexe1:fleur + sexe1:julien+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
 ## avec variables rattachees aux mouvements et traplines
-i7<- (lmer(log(v$sd90)~  gen.mst+ nbvisdperso+ global + annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i7<- (lmer(log(v$sd90)~  gen.mst+ nbvisdperso+ global + annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
 ## avec variables reliees aux a la presence des competiteurs # pas d interaction avec annee ou julien possible false convergence
-i8<- (lmer(log(v$sd90)~  nbviscomp+ annee1 + julien +(1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
-i9<- (lmer(log(v$sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i8<- (lmer(log(v$sd90)~  nbviscomp+ annee1 + julien +(1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
+i9<- (lmer(log(v$sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
 
 
 #### AIC avec REML=F
@@ -166,9 +166,9 @@ i9<- (lmer(log(v$sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v, n
 
 #q1<- lqmm(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature,random=~1,group=bague, data=v,tau=0.9,na.action=na.omit)
 
-q1<- rq(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature,data=v,tau=0.9,na.action=na.omit)
+#q1<- rq(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature,data=v,tau=0.9,na.action=na.omit)
 
-q2<- rq(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature,data=v,tau=0.1,na.action=na.omit)
+#q2<- rq(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature,data=v,tau=0.1,na.action=na.omit)
 
 
 ##################################################################################
@@ -193,7 +193,7 @@ paramSD<-cbind(co,ci)
 
 
 ### master data.frame
-newdat<-with(v,data.frame(
+newdat<-with(v2,data.frame(
 	sexe1="4",
 	masse=mean(masse),
 	parasites=mean(parasites),
@@ -224,14 +224,16 @@ col<-alpha("black",0.1)
 ylim2<-range(exp(log(v$sd90)),na.rm=TRUE)
 
 ### sexe15: julien
-plot(v$julien,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Julian date",cex.lab=2,cex.axis=2, type="n",yaxt="n")
-points(v$julien,exp(log(v$sd90)),col=colp)
+plot(v2$julien,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Julian date",cex.lab=2,cex.axis=2, type="n",yaxt="n",xaxt="n")
+points(v2$julien,exp(log(v$sd90)),col=colp)
 legend("topleft",c("a)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
 legend("topleft",c("Male","Female"),inset=c(0.2,0),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
 axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
+atx<-pretty(v$julien)
+axis(1,at=(atx-mean(v$julien))/sd(v$julien),label=atx,cex.axis=2)
 
 # modavgpred
-x<-seq(142,248, by=10)
+x<-seq(min(v2$julien),max(v2$julien),length.out=20)
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"julien"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
@@ -243,25 +245,28 @@ polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
   par(mgp=c(2,1,0))
-  plot(exp(f)~julien,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="Julian date",cex.lab=1,cex.axis=1,type="n",yaxt="n")
-  points(v$julien,exp(log(v$sd90)),col=colp2,cex=0.7)
+  plot(v2$julien,exp(log(v$sd90)),ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="Julian date",cex.lab=1,cex.axis=1,type="n",yaxt="n",xaxt="n")
+  points(v2$julien,exp(log(v$sd90)),col=colp2,cex=0.7)
   polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
   polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
   lab<-pretty(ylim2)/1000#;lab[length(lab)]<-""
   axis(2,at=pretty(ylim2),label=lab,las=2,cex.axis=1)
+  axis(1,at=(atx-mean(v$julien))/sd(v$julien),label=atx,cex.axis=1)
   par(mgp=c(3,1,0))
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
 
 ### temperature
-plot(v$temperature,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Temperature (\u00B0C)",cex.lab=2,cex.axis=2, type="n",yaxt="n")
+plot(v2$temperature,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Temperature (\u00B0C)",cex.lab=2,cex.axis=2, type="n",yaxt="n",xaxt="n")
 legend("topleft",c("b)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
-points(v$temperature,exp(log(v$sd90)),col=colp)
+points(v2$temperature,exp(log(v$sd90)),col=colp)
 axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
+atx<-pretty(v$temperature)
+axis(1,at=(atx-mean(v$temperature))/sd(v$temperature),label=atx,cex.axis=2)
 
 
 # modavgpred
-x<-seq(7,27, by=1)
+x<-seq(min(v2$temperature),max(v2$temperature),length.out=20)
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"temperature"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
@@ -273,24 +278,27 @@ polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
   par(mgp=c(2,1,0))
-  plot(exp(yy)~temperature,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="Temperature (\u00B0C)",cex.lab=1,cex.axis=1,type="n",yaxt="n")
-  points(v$temperature,exp(log(v$sd90)),col=colp2,cex=0.7)
+  plot(v2$temperature,exp(log(v$sd90)),ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="Temperature (\u00B0C)",cex.lab=1,cex.axis=1,type="n",yaxt="n",xaxt="n")
+  points(v2$temperature,exp(log(v$sd90)),col=colp2,cex=0.7)
   polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
   polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
   lab<-pretty(ylim2)/1000#;lab[length(lab)]<-""
   axis(2,at=pretty(ylim2),label=lab,las=2,cex.axis=1)
+  axis(1,at=(atx-mean(v$temperature))/sd(v$temperature),label=atx,cex.axis=1)
   par(mgp=c(3,1,0))
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
 
 #nbvisdperso
-plot(v$nbvisdperso,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Spatial concentration",cex.lab=2,cex.axis=2, type="n",yaxt="n")
+plot(v2$nbvisdperso,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Spatial concentration",cex.lab=2,cex.axis=2, type="n",yaxt="n",xaxt="n")
 legend("topleft",c("c)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
-points(v$nbvisdperso,exp(log(v$sd90)),col=colp)
+points(v2$nbvisdperso,exp(log(v$sd90)),col=colp)
 axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
+atx<-pretty(v$nbvisdperso)
+axis(1,at=(atx-mean(v$nbvisdperso))/sd(v$nbvisdperso),label=atx,cex.axis=2)
 
 # modavgpred
-x<-seq(0,1, by=0.05)
+x<-seq(min(v2$nbvisdperso),max(v2$nbvisdperso),length.out=20)
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"nbvisdperso"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
@@ -302,23 +310,26 @@ polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
   par(mgp=c(2,1,0))
-  plot(exp(yy)~nbvisdperso,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="Spatial concentration",cex.lab=1,cex.axis=1,type="n",yaxt="n")
-  points(v$nbvisdperso,exp(log(v$sd90)),col=colp2,cex=0.7)
+  plot(v2$nbvisdperso,exp(log(v$sd90)),ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="Spatial concentration",cex.lab=1,cex.axis=1,type="n",yaxt="n",xaxt="n")
+  points(v2$nbvisdperso,exp(log(v$sd90)),col=colp2,cex=0.7)
   polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
   polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
   lab<-pretty(ylim2)/1000#;lab[length(lab)]<-""
   axis(2,at=pretty(ylim2),label=lab,las=2,cex.axis=1)
+  axis(1,at=(atx-mean(v$nbvisdperso))/sd(v$nbvisdperso),label=atx,cex.axis=1)
   par(mgp=c(3,1,0))
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
 ## global
-plot(v$global,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="FT", cex.lab=2,cex.axis=2, type="n",yaxt="n")
+plot(v2$global,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="FT", cex.lab=2,cex.axis=2, type="n",yaxt="n",xaxt="n")
 legend("topleft",c("d)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
-points(v$global,exp(log(v$sd90)),col=colp)
+points(v2$global,exp(log(v$sd90)),col=colp)
 axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
+atx<-pretty(v$global)
+axis(1,at=(atx-mean(v$global))/sd(v$global),label=atx,cex.axis=2)
 
 # modavgpred
-x<-seq(0,1, by=0.05)
+x<-seq(min(v2$global),max(v2$global),length.out=20)
 newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"global"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
@@ -330,12 +341,13 @@ polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
   par(mgp=c(2,1,0))
-  plot(exp(yy)~global,ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="FT",cex.lab=1,cex.axis=1,type="n",yaxt="n",bg="blue")
-  points(v$global,exp(log(v$sd90)),col=colp2,cex=0.7)
+  plot(v2$global,exp(log(v$sd90)),ylim=ylim2,ylab="SD.IVD (sec x 1000)       ",xlab="FT",cex.lab=1,cex.axis=1,type="n",yaxt="n",bg="blue",xaxt="n")
+  points(v2$global,exp(log(v$sd90)),col=colp2,cex=0.7)
   polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
   polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
   lab<-pretty(ylim2)/1000#;lab[length(lab)]<-""
   axis(2,at=pretty(ylim2),label=lab,las=2,cex.axis=1)
+  axis(1,at=(atx-mean(v$global))/sd(v$global),label=atx,cex.axis=1)
   par(mgp=c(3,1,0))
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
