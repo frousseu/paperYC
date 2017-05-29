@@ -375,34 +375,34 @@ v2[]<-lapply(v,function(i){if(is.numeric(i)){scale(i)}else{i}})
 
 ########  Meme serie de modele pour l indice theo
 
-t1<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvTrap + moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap + gen.mst + nbviscompTrap + sexe1:moy_pond_trouee_Trap + sexe1:moy_pond_gauli_Trap + sexe1:moy_pond_arbre_Trap+ sexe1:moy_pond_fleur_Trap+ sexe1:julien+pluie:temperature+(1|bague), data=v, na.action=na.omit,family=binomial,control=controlglmer))
-t2<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap + gen.mst + nbviscompTrap +nbabreuvTrap+ sexe1:julien+pluie:temperature+(1|bague), data=v, na.action=na.omit,family=binomial,control=controlglmer))
-t3<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + gen.mst + nbviscompTrap + sexe1:julien+nbabreuvTrap+pluie:temperature+(1|bague), data=v, na.action=na.omit,family=binomial,control=controlglmer))
-t4<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~  sexe1 + masse + parasites+ annee1 + julien + (1|bague) , data=v, na.action=na.omit, family=binomial,control=controlglmer))
+t1<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvTrap + moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap + gen.mst + nbviscompTrap + sexe1:moy_pond_trouee_Trap + sexe1:moy_pond_gauli_Trap + sexe1:moy_pond_arbre_Trap+ sexe1:moy_pond_fleur_Trap+ sexe1:julien+pluie:temperature+(1|bague), data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+t2<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap + gen.mst + nbviscompTrap +nbabreuvTrap+ sexe1:julien+pluie:temperature+(1|bague), data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+t3<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + gen.mst + nbviscompTrap + sexe1:julien+nbabreuvTrap+pluie:temperature+(1|bague), data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+t4<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~  sexe1 + masse + parasites+ annee1 + julien + (1|bague) , data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables abiotiques   Pas d interactions possible entre pluie et annee : false convergence
-t5<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  temperature+ pluie+ pluie:temperature +  julien+  annee1 +(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
+t5<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  temperature+ pluie+ pluie:temperature +  julien+  annee1 +(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables du paysages
-t6<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap +annee1+ julien+(1|bague), data=v, na.action=na.omit, family=binomial,control=controlglmer))
+t6<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap +annee1+ julien+(1|bague), data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables rattachees aux mouvements et traplines  (ne converge pas avec gen.mst)
-t7<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbvisdpersoMAX+ nbabreuvTrap+annee1+ julien+(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
+t7<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbvisdpersoMAX+ nbabreuvTrap+annee1+ julien+(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables reliees aux a la presence des competiteurs # pas d interaction avec annee ou julien possible false convergence
-t8<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbviscompTrap+ annee1 + julien +(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
-t9<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ annee1+ julien+ (1|bague),data=v, na.action=na.omit,family=binomial,control=controlglmer))
+t8<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbviscompTrap+ annee1 + julien +(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
+t9<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ annee1+ julien+ (1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
 
 ##  Theo avec REML=T pour le model avraging ...
-t1<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvTrap + moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap + gen.mst + nbviscompTrap + sexe1:moy_pond_trouee_Trap + sexe1:moy_pond_gauli_Trap + sexe1:moy_pond_arbre_Trap+ sexe1:moy_pond_fleur_Trap+ sexe1:julien+pluie:temperature+(1|bague),data=v, na.action=na.omit,family=binomial,control=controlglmer))
-t2<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap + gen.mst + nbviscompTrap +nbabreuvTrap+ sexe1:julien+pluie:temperature+(1|bague), data=v, na.action=na.omit,family=binomial,control=controlglmer))
-t3<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + gen.mst + nbviscompTrap + sexe1:julien+nbabreuvTrap+pluie:temperature+(1|bague),data=v, na.action=na.omit,family=binomial,control=controlglmer))
-t4<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~  sexe1 + masse + parasites+ annee1 + julien + (1|bague) , data=v,na.action=na.omit, family=binomial,control=controlglmer))
+t1<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvTrap + moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap + gen.mst + nbviscompTrap + sexe1:moy_pond_trouee_Trap + sexe1:moy_pond_gauli_Trap + sexe1:moy_pond_arbre_Trap+ sexe1:moy_pond_fleur_Trap+ sexe1:julien+pluie:temperature+(1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+t2<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap + gen.mst + nbviscompTrap +nbabreuvTrap+ sexe1:julien+pluie:temperature+(1|bague), data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+t3<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + gen.mst + nbviscompTrap + sexe1:julien+nbabreuvTrap+pluie:temperature+(1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+t4<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~  sexe1 + masse + parasites+ annee1 + julien + (1|bague) , data=v2,na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables abiotiques   Pas d interactions possible entre pluie et annee : false convergence
-t5<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  temperature+ pluie+ pluie:temperature +  julien+  annee1 +(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
+t5<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  temperature+ pluie+ pluie:temperature +  julien+  annee1 +(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables du paysages
-t6<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap +annee1+ julien+(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
+t6<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  moy_pond_trouee_Trap + moy_pond_arbre_Trap + moy_pond_gauli_Trap + moy_pond_fleur_Trap +annee1+ julien+(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables rattachees aux mouvements et traplines  (ne converge pas avec gen.mst)
-t7<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbvisdpersoMAX+ nbabreuvTrap+annee1+ julien+(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
+t7<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbvisdpersoMAX+ nbabreuvTrap+annee1+ julien+(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables reliees aux a la presence des competiteurs # pas d interaction avec annee ou julien possible false convergence
-t8<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbviscompTrap+ annee1 + julien +(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
-t9<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ annee1+ julien+ (1|bague),data=v, na.action=na.omit,family=binomial,control=controlglmer))
+t8<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbviscompTrap+ annee1 + julien +(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
+t9<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ annee1+ julien+ (1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
 
 
 # Pour sortir des tableaux d AIC
@@ -420,7 +420,7 @@ paramST<-cbind(co,ci)
 
 
 ### master data.frame
-newdat<-with(v,data.frame(
+newdat<-with(v2,data.frame(
   sexe1=4,
   masse=mean(masse),
 	 parasites=mean(parasites),
@@ -448,6 +448,7 @@ colp<-gray(0,0.15)
 val<-v$nb0/v$long.dia
 
 png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig_extra_scaled.png",width=6.5,height=4,units="in",res=500,pointsize=5)
+
 par(mfrow=c(1,2),mar=c(5,6,2,2)) # pour mon seminaire 2
 par(mfrow=c(2,3))
 
@@ -456,12 +457,14 @@ valab<-c("Tree density","Forest gap","Flower density (nb/m\U00B2)","Spatial conc
 
 for(i in seq_along(va)){
   if(any(grep("abreuv",va[i]))){
-    x<-seq(min(v[,va[i]]),max(v[,va[i]]),by=1)
+    x<-seq(min(v2[,va[i]]),max(v2[,va[i]]),length.out=20)
+    atx<-pretty(v[,va[i]],n=2)
   }else{
-    x<-seq(min(v[,va[i]]),max(v[,va[i]]),length.out=5)
+    x<-seq(min(v2[,va[i]]),max(v2[,va[i]]),length.out=20)
+    atx<-pretty(v[,va[i]])
   }
-  plot(x,seq_along(x),ylim=c(0,1), ylab="ST",xlab=valab[i],cex.lab=1.8,cex.axis=2,type="n")
-  points(v[,va[i]],val,col=colp)
+  plot(x,seq_along(x),ylim=c(0,1), ylab="ST",xlab=valab[i],cex.lab=1.8,cex.axis=2,type="n",xaxt="n")
+  points(v2[,va[i]],val,col=colp)
   legend("topright",paste0(letters[i],")"),lty=c(1,3),bty="n", col=F, cex=2)
   if(i==1){legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)}
   ### modavgpred
@@ -473,6 +476,7 @@ for(i in seq_along(va)){
   newdat2[,"sexe1"]<-as.factor("5")
   p<-as.data.frame(modavgPred(modelt,newdat=newdat2,type="response")$matrix.output)
   polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
+  axis(1,at=(atx-mean(v[,va[i]]))/sd(v[,va[i]]),label=atx,cex.axis=2)
 }
 
 dev.off()
@@ -494,22 +498,22 @@ v2<-v
 v2[]<-lapply(v,function(i){if(is.numeric(i)){scale(i)}else{i}})
 
 
-g1<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob + sexe1:moy_pond_trouee_Global + sexe1:moy_pond_gauli_Global + sexe1:moy_pond_arbre_Global+ sexe1:moy_pond_fleur_Global+ sexe1:julien+ pluie:temperature+ (1|bague),data=v, na.action=na.omit,family=binomial,control=controlglmer))
-g2<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob+ sexe1:julien + pluie:temperature+(1|bague),data=v, na.action=na.omit,family=binomial,control=controlglmer))
-g3<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + gen.mst + nbviscompGlob + nbabreuvGlob+ sexe1:julien+pluie:temperature+(1|bague),data=v, na.action=na.omit,family=binomial,control=controlglmer))
-g4<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague) , data=v,na.action=na.omit, family=binomial,control=controlglmer))
+g1<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob + sexe1:moy_pond_trouee_Global + sexe1:moy_pond_gauli_Global + sexe1:moy_pond_arbre_Global+ sexe1:moy_pond_fleur_Global+ sexe1:julien+ pluie:temperature+ (1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+g2<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob+ sexe1:julien + pluie:temperature+(1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+g3<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + gen.mst + nbviscompGlob + nbabreuvGlob+ sexe1:julien+pluie:temperature+(1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+g4<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague) , data=v2,na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables abiotiques   Pas d interactions possible entre pluie et annee : false convergence
-g5<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  temperature+ pluie+  pluie:temperature+  julien+  annee1 +(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
+g5<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  temperature+ pluie+  pluie:temperature+  julien+  annee1 +(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables du paysages
-g6<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global +annee1+ julien+(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
+g6<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global +annee1+ julien+(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables rattachees aux mouvements et traplines
-g7<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  gen.mst+ nbvisdpersoMAX+ nbabreuvGlob + annee1+ julien+ (1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
+g7<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  gen.mst+ nbvisdpersoMAX+ nbabreuvGlob + annee1+ julien+ (1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables reliees aux a la presence des competiteurs # pas d interaction avec annee ou julien possible false convergence
-g8<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  nbviscompGlob+ annee1 + julien +(1|bague),data=v, na.action=na.omit, family=binomial,control=controlglmer))
-g9<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ annee1+ julien+ (1|bague),data=v, na.action=na.omit,family=binomial,control=controlglmer))
+g8<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap) ~  nbviscompGlob+ annee1 + julien +(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
+g9<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ annee1+ julien+ (1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
 
 # avec REML =T pour avoir les bons coef
-gg<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob + sexe1:moy_pond_trouee_Global + sexe1:moy_pond_gauli_Global + sexe1:moy_pond_arbre_Global+ sexe1:moy_pond_fleur_Global+ sexe1:julien+ pluie:temperature+ (1|bague),data=v,na.action=na.omit,family=binomial,control=controlglmer))
+gg<- (glmer(cbind(v$nbvisINtrap,v$nbvispersotot - v$nbvisINtrap)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdpersoMAX+ temperature + pluie + nbabreuvGlob + moy_pond_trouee_Global + moy_pond_arbre_Global + moy_pond_gauli_Global + moy_pond_fleur_Global + gen.mst + nbviscompGlob + sexe1:moy_pond_trouee_Global + sexe1:moy_pond_gauli_Global + sexe1:moy_pond_arbre_Global+ sexe1:moy_pond_fleur_Global+ sexe1:julien+ pluie:temperature+ (1|bague),data=v2,na.action=na.omit,family=binomial,control=controlglmer))
 
 modelg<-c(g1=g1,g2=g2,g3=g3,g4=g4,g5=g5,g6=g6,g7=g7,g8=g8,g9=g9)
 maFT<-aictab(modelg)
@@ -520,7 +524,7 @@ paramFT<-cbind(co,ci)
 
 
 ### master data.frame
-newdat<-with(v,data.frame(
+newdat<-with(v2,data.frame(
   sexe1=4,
   masse=mean(masse),
   parasites=mean(parasites),
@@ -557,12 +561,14 @@ valab<-c("Tree density","Forest gap","Flower density (nb/m\U00B2)","Spatial conc
 
 for(i in seq_along(va)){
   if(any(grep("abreuv",va[i]))){
-    x<-seq(min(v[,va[i]]),max(v[,va[i]]),by=1)
+    x<-seq(min(v2[,va[i]]),max(v2[,va[i]]),length.out=20)
+    atx<-pretty(v[,va[i]],n=5)
   }else{
-    x<-seq(min(v[,va[i]]),max(v[,va[i]]),length.out=5)
+    x<-seq(min(v2[,va[i]]),max(v2[,va[i]]),length.out=20)
+    atx<-pretty(v[,va[i]])
   }
-  plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab=valab[i],cex.lab=1.8,cex.axis=2,type="n")
-  points(v[,va[i]],val,col=colp)
+  plot(x,seq_along(x),ylim=c(0,1), ylab="FT",xlab=valab[i],cex.lab=1.8,cex.axis=2,type="n",xaxt="n")
+  points(v2[,va[i]],val,col=colp)
   legend("topright",paste0(letters[i],")"),lty=c(1,3),bty="n", col=F, cex=2)
   if(i==1){legend("topleft",c("Male","Female"),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)}
   ### modavgpred
@@ -574,6 +580,8 @@ for(i in seq_along(va)){
   newdat2[,"sexe1"]<-as.factor("5")
   p<-as.data.frame(modavgPred(modelg,newdat=newdat2,type="response")$matrix.output)
   polygon(c(x,rev(x)),c(p$lower,rev(p$upper)),border=NA,col=colf)
+  axis(1,at=(atx-mean(v[,va[i]]))/sd(v[,va[i]]),label=atx,cex.axis=2)
+  
 }
 
 dev.off()
@@ -626,11 +634,11 @@ dec<-function(i,col=1:ncol(i),...){
 }
 
 options(scipen=20)
-STFT<-as.data.frame(cbind(paramST,paramFT))
+STFT<-as.data.frame(cbind(paramST[,-2],paramFT[,-2]))
 #STFT<-apply(STFT,2,format,digits=1,nsmall=1,width=2,trim=FALSE)
 print.htmlTable(htmlTable(dec(STFT,digits=1,nsmall=2,width=2)))
 
-SD<-apply(paramSD,2,format,digits=1,nsmall=1,width=2,trim=FALSE)
+SD<-apply(paramSD[,-2],2,format,digits=1,nsmall=1,width=2,trim=FALSE)
 print.htmlTable(htmlTable(SD))
 
 tabST<-cbind(as.data.frame(maST)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maST)),function(i){fix_formula(modeli[[i]])}))[,c(1,5,2,3,4)]
