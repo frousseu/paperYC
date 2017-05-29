@@ -146,19 +146,19 @@ controlglmer<-glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=200000))
 
 #J enleve nbabr car trop correlee avec gen.mst. cor =  0.902
 
-i1<- (lmer(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
-i2<- (lmer(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp+  (1|bague) + (1|abreuv), REML=F, data=v, na.action=na.omit))
-i3<- (lmer(log(sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+temperature + pluie + gen.mst + nbviscomp + sexe1:julien+pluie:temperature+(1|bague)+ (1|abreuv), REML=F , data=v, na.action=na.omit))
-i4<- (lmer(log(sd90)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague)+ (1|abreuv) , data=v, REML=F, na.action=na.omit))
+i1<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i2<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp+  (1|bague) + (1|abreuv), REML=F, data=v, na.action=na.omit))
+i3<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+temperature + pluie + gen.mst + nbviscomp + sexe1:julien+pluie:temperature+(1|bague)+ (1|abreuv), REML=F , data=v, na.action=na.omit))
+i4<- (lmer(log(v$sd90)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague)+ (1|abreuv) , data=v, REML=F, na.action=na.omit))
 ## avec variables abiotiques   Pas d interactions possible entre pluie et annee : false convergence
-i5<- (lmer(log(sd90) ~  temperature+ pluie+ temperature: pluie+  julien+  annee1 +(1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i5<- (lmer(log(v$sd90) ~  temperature+ pluie+ temperature: pluie+  julien+  annee1 +(1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
 ## avec variables du paysages
-i6<- (lmer(log(sd90) ~  fleur +annee1+ julien+ sexe1:fleur + sexe1:julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i6<- (lmer(log(v$sd90) ~  fleur +annee1+ julien+ sexe1:fleur + sexe1:julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
 ## avec variables rattachees aux mouvements et traplines
-i7<- (lmer(log(sd90)~  gen.mst+ nbvisdperso+ global + annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i7<- (lmer(log(v$sd90)~  gen.mst+ nbvisdperso+ global + annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
 ## avec variables reliees aux a la presence des competiteurs # pas d interaction avec annee ou julien possible false convergence
-i8<- (lmer(log(sd90)~  nbviscomp+ annee1 + julien +(1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
-i9<- (lmer(log(sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i8<- (lmer(log(v$sd90)~  nbviscomp+ annee1 + julien +(1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
+i9<- (lmer(log(v$sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v, na.action=na.omit))
 
 
 #### AIC avec REML=F
@@ -203,7 +203,7 @@ newdat<-with(v,data.frame(
 	global=mean(global),
 	temperature=mean(temperature),
 	pluie=mean(pluie),
- fleur=mean(fleur),
+  fleur=mean(fleur),
 	gen.mst=mean(gen.mst),
 	nbviscomp=mean(nbviscomp)
 ))
@@ -221,17 +221,10 @@ colp2<-gray(0,0.10/7)
 ylim<-c(0,5000)
 
 col<-alpha("black",0.1)
-#ylim<-c(0,3250)
 ylim2<-range(exp(log(v$sd90)),na.rm=TRUE)
 
 ### sexe15: julien
-julien<- seq(142,248, by=10)
-f<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*(julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*(julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
-m<- 7.88650  -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*(julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
-
-plot(exp(f)~julien,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Julian date",cex.lab=2,cex.axis=2, type="n",yaxt="n")
-#lines(exp(f)~julien, lty=1, lwd=3,col="red")
-#lines(exp(m)~julien, lty=3, lwd=3,col="red")
+plot(v$julien,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Julian date",cex.lab=2,cex.axis=2, type="n",yaxt="n")
 points(v$julien,exp(log(v$sd90)),col=colp)
 legend("topleft",c("a)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
 legend("topleft",c("Male","Female"),inset=c(0.2,0),fill=c(colm,colf),border=NA, bty="n",col=T, cex=2)
@@ -243,11 +236,9 @@ newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"julien"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p1<-as.data.frame(modavgPred(modeli,newdat=newdat2,type="response")$matrix.output)
-#lines(exp(p$mod.avg.pred)~x, lty=1, lwd=2)
 polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
 newdat2[,"sexe1"]<-as.factor("5")
 p2<-as.data.frame(modavgPred(modeli,newdat=newdat2,type="response")$matrix.output)
-#lines(exp(p$mod.avg.pred)~x, lty=3, lwd=2)
 polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
@@ -263,18 +254,11 @@ subplot({
 
 
 ### temperature
-temperature<-seq(7,27, by=1)
-yy<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*(temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*(temperature)*mean(v$pluie)
-plot(exp(yy)~temperature,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Temperature (\u00B0C)",cex.lab=2,cex.axis=2, type="n",yaxt="n")
-#lines(exp(yy)~temperature, lwd=3,col="red")
+plot(v$temperature,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Temperature (\u00B0C)",cex.lab=2,cex.axis=2, type="n",yaxt="n")
 legend("topleft",c("b)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
 points(v$temperature,exp(log(v$sd90)),col=colp)
 axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
 
-yymax<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*min(temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*min(temperature)*mean(v$pluie)
-yymin<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*mean(v$global) + 0.02039*max(temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*max(temperature)*mean(v$pluie)
-exp(yymin)
-exp(yymax)
 
 # modavgpred
 x<-seq(7,27, by=1)
@@ -282,11 +266,9 @@ newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"temperature"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p1<-as.data.frame(modavgPred(modeli,newdat=newdat2,type="response")$matrix.output)
-#lines(exp(p$mod.avg.pred)~x, lty=1, lwd=2)
 polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
 newdat2[,"sexe1"]<-as.factor("5")
 p2<-as.data.frame(modavgPred(modeli,newdat=newdat2,type="response")$matrix.output)
-#lines(exp(p$mod.avg.pred)~x, lty=3, lwd=2)
 polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
@@ -302,16 +284,10 @@ subplot({
 
 
 #nbvisdperso
-nbvisdperso<-seq(0,1, by=0.05)
-yy<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*(nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
-plot(exp(yy)~nbvisdperso,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Spatial concentration",cex.lab=2,cex.axis=2, type="n",yaxt="n")
-#lines(exp(yy)~nbvisdperso, lwd=3,col="red")
+plot(v$nbvisdperso,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="Spatial concentration",cex.lab=2,cex.axis=2, type="n",yaxt="n")
 legend("topleft",c("c)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
 points(v$nbvisdperso,exp(log(v$sd90)),col=colp)
 axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
-
-yymin<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*min(nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
-yymax<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*max(nbvisdperso) + 0.33182*mean(v$global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
 
 # modavgpred
 x<-seq(0,1, by=0.05)
@@ -319,13 +295,9 @@ newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"nbvisdperso"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p1<-as.data.frame(modavgPred(modeli,newdat=newdat2,type="response")$matrix.output)
-#lines(exp(p$mod.avg.pred)~x, lty=1, lwd=2)
-#lines(exp(predict(q1,newdat2))~x,col="red")
-#lines(exp(predict(q2,newdat2))~x,col="red")
 polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
 newdat2[,"sexe1"]<-as.factor("5")
 p2<-as.data.frame(modavgPred(modeli,newdat=newdat2,type="response")$matrix.output)
-#lines(exp(p$mod.avg.pred)~x, lty=3, lwd=2)
 polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
@@ -340,18 +312,10 @@ subplot({
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
 ## global
-global<-seq(0,1, by=0.05)
-yy<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*(global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
-plot(exp(yy)~global,ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="FT", cex.lab=2,cex.axis=2, type="n",yaxt="n")
-#lines(exp(yy)~global, lwd=3,col="red")
+plot(v$global,exp(log(v$sd90)),ylim=ylim, ylab="SD.IVD (sec x 1000)", xlab="FT", cex.lab=2,cex.axis=2, type="n",yaxt="n")
 legend("topleft",c("d)"),lty=c(1,3),bty="n", col=F, cex=2,inset=c(-0.1,0))
 points(v$global,exp(log(v$sd90)),col=colp)
 axis(2,at=pretty(ylim),label=pretty(ylim)/1000,las=2,cex.axis=2)
-
-yymin<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*min(global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
-yymax<- 7.88650 +0.37710 -0.05772*mean(v$masse) + 0.00100*mean(v$parasites) -0.04156 -0.00094*mean(v$julien) -1.92458*mean(v$nbvisdperso) + 0.33182*max(global) + 0.02039*mean(v$temperature) -0.00426*mean(v$pluie) + 0.01058*mean(v$nbabr) +  0.00014*mean(v$fleur) -0.00004*mean(v$gen.mst) + 0.00054*mean(v$nbviscomp) -0.00053*mean(v$fleur)  -0.00253*mean(v$julien)  -0.00090*mean(v$nbviscomp) +  0.00120*mean(v$temperature)*mean(v$pluie)
-exp(yymin)
-exp(yymax)
 
 # modavgpred
 x<-seq(0,1, by=0.05)
@@ -359,11 +323,9 @@ newdat2<-newdat[rep(1,length(x)),]
 newdat2[,"global"]<-x
 newdat2[,"sexe1"]<-as.factor("4")
 p1<-as.data.frame(modavgPred(modeli,newdat=newdat2,type="response")$matrix.output)
-#lines(exp(p$mod.avg.pred)~x, lty=1, lwd=2)
 polygon(c(x,rev(x)),exp(c(p1$lower,rev(p1$upper))),border=NA,col=colm)
 newdat2[,"sexe1"]<-as.factor("5")
 p2<-as.data.frame(modavgPred(modeli,newdat=newdat2,type="response")$matrix.output)
-#lines(exp(p$mod.avg.pred)~x, lty=3, lwd=2)
 polygon(c(x,rev(x)),exp(c(p2$lower,rev(p2$upper))),border=NA,col=colf)
 rect(subplotlim()$x[1],subplotlim()$y[1],subplotlim()$x[2],subplotlim()$y[2],col="white")
 subplot({
@@ -644,9 +606,17 @@ fix_formula<-function(x){
   strsplit(as.character(lme4:::nobars(formula(x)))," ~ ")[[3]]  
 }
 
-STFT<-cbind(paramST,paramFT)
-STFT<-apply(STFT,2,format,digits=1,nsmall=1,width=2,trim=FALSE)
-print.htmlTable(htmlTable(STFT))
+dec<-function(i,col=1:ncol(i),...){
+  for(j in col){
+    i[j]<-format(round(i[j],5),...)  
+  }
+  i
+}
+
+options(scipen=20)
+STFT<-as.data.frame(cbind(paramST,paramFT))
+#STFT<-apply(STFT,2,format,digits=1,nsmall=1,width=2,trim=FALSE)
+print.htmlTable(htmlTable(dec(STFT,digits=1,nsmall=2,width=2)))
 
 SD<-apply(paramSD,2,format,digits=1,nsmall=1,width=2,trim=FALSE)
 print.htmlTable(htmlTable(SD))
@@ -655,9 +625,9 @@ tabST<-cbind(as.data.frame(maST)[,c(1,2,4,6)],model=sapply(as.integer(row.names(
 tabFT<-cbind(as.data.frame(maFT)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maFT)),function(i){fix_formula(modeli[[i]])}))[,c(1,5,2,3,4)]
 tabSD<-cbind(as.data.frame(maSD)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maSD)),function(i){fix_formula(modeli[[i]])}))[,c(1,5,2,3,4)]
 
-print.htmlTable(htmlTable(tabST,rnames=FALSE))
-print.htmlTable(htmlTable(tabFT,rnames=FALSE))
-print.htmlTable(htmlTable(tabSD,rnames=FALSE))
+print.htmlTable(htmlTable(dec(tabST,col=4:5,digits=1,width=2,nsmall=2),rnames=FALSE))
+print.htmlTable(htmlTable(dec(tabFT,col=4:5,digits=1,width=2,nsmall=2),rnames=FALSE))
+print.htmlTable(htmlTable(dec(tabSD,col=4:5,digits=1,width=2,nsmall=2),rnames=FALSE))
 
 
 
