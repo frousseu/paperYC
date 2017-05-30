@@ -178,19 +178,19 @@ maSD<-aictab(modeli)
 # Il faut cr??r une liste appel?e "model" avec tout les mod?les
 #! ex: model<-c(model1,model2,model3,...)
 
-i1<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature+ (1|bague)+ (1|abreuv), REML=T, data=v2, na.action=na.omit))
-i2<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp+  (1|bague) + (1|abreuv), REML=T, data=v2, na.action=na.omit))
-i3<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+temperature + pluie + gen.mst + nbviscomp + sexe1:julien+pluie:temperature+(1|bague)+ (1|abreuv), REML=T , data=v2, na.action=na.omit))
-i4<- (lmer(log(v$sd90)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague)+ (1|abreuv) , data=v2, REML=T, na.action=na.omit))
+i1<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
+i2<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp+  (1|bague) + (1|abreuv), REML=F, data=v2, na.action=na.omit))
+i3<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+temperature + pluie + gen.mst + nbviscomp + sexe1:julien+pluie:temperature+(1|bague)+ (1|abreuv), REML=F , data=v2, na.action=na.omit))
+i4<- (lmer(log(v$sd90)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague)+ (1|abreuv) , data=v2, REML=F, na.action=na.omit))
 ## avec variables abiotiques   Pas d interactions possible entre pluie et annee : false convergence
-i5<- (lmer(log(v$sd90) ~  temperature+ pluie+ temperature: pluie+  julien+  annee1 +(1|bague)+ (1|abreuv), REML=T, data=v2, na.action=na.omit))
+i5<- (lmer(log(v$sd90) ~  temperature+ pluie+ temperature: pluie+  julien+  annee1 +(1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
 ## avec variables du paysages
-i6<- (lmer(log(v$sd90) ~  fleur +annee1+ julien+ sexe1:fleur + sexe1:julien+ (1|bague)+ (1|abreuv), REML=T, data=v2, na.action=na.omit))
+i6<- (lmer(log(v$sd90) ~  fleur +annee1+ julien+ sexe1:fleur + sexe1:julien+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
 ## avec variables rattachees aux mouvements et traplines
-i7<- (lmer(log(v$sd90)~  gen.mst+ nbvisdperso+ global + annee1+ julien+ (1|bague)+ (1|abreuv), REML=T, data=v2, na.action=na.omit))
+i7<- (lmer(log(v$sd90)~  gen.mst+ nbvisdperso+ global + annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
 ## avec variables reliees aux a la presence des competiteurs # pas d interaction avec annee ou julien possible false convergence
-i8<- (lmer(log(v$sd90)~  nbviscomp+ annee1 + julien +(1|bague)+ (1|abreuv), REML=T, data=v2, na.action=na.omit))
-i9<- (lmer(log(v$sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=T, data=v2, na.action=na.omit))
+i8<- (lmer(log(v$sd90)~  nbviscomp+ annee1 + julien +(1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
+i9<- (lmer(log(v$sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
 
 modeli<-list(i1=i1,i2=i2,i3=i3,i4=i4,i5=i5,i6=i6,i7=i7,i8=i8,i9=i9)
 ma<-model.avg(modeli)
@@ -199,7 +199,7 @@ ci<-confint(ma,full=TRUE)
 paramSD<-cbind(co,ci)
 paramSD<-paramSD[!duplicated(row.names(paramSD)),] #tiny bug in MuMIn with repeated values
 
-
+### Les coefficients doivent idéalement être estimés en REML, mais la sélection de modèle doit se faire par ML, alors comment on obtient les prédictions REML averagés si on passe par modavgPred qui ne prend que du ML pour les fixed effects?
 
 ##############################################
 #####  courbes pour l<article avec les variables significatives
@@ -639,13 +639,14 @@ STFT<-as.data.frame(cbind(paramST[,-2],paramFT[,-2]))
 n1<-c("(Intercept)","sexe15","masse","parasites","annee12008","julien","nbvisdpersoMAX","temperature","pluie","nbabreuvTrap","moy_pond_trouee_Trap","moy_pond_arbre_Trap","moy_pond_gauli_Trap","moy_pond_fleur_Trap","gen.mst","nbviscompTrap","moy_pond_trouee_Trap:sexe15","moy_pond_gauli_Trap:sexe15","moy_pond_arbre_Trap:sexe15","moy_pond_fleur_Trap:sexe15","julien:sexe15","pluie:temperature","global","fleur","nbviscomp","nbvisdperso","fleur:sexe15","nbviscomp:sexe15")
 n2<-c("(Intercept)","Sex (female)","Body mass","Parasite load","Year (2008)","Julian date","Spatial concentration","Temperature","Rain","Number of feeders","Forest gap (occurence)","Tree density","Sapling density","Flower density","MST","Competition","Sex x Forest gap","Sex x Sapling density","Sex x Tree density","Sex x Flower density","Sex x Julian date","Temperature x Rain","FT","Flower density","Competition","Spatial concentration","Sex x Flower density","Sex x Competition")
 row.names(STFT)<-n2[match(row.names(STFT),n1)]
+STFT<-STFT[-1,] #on enlève l'intercept
+STFT<-STFT[order(row.names(STFT)),]
 print.htmlTable(htmlTable(dec(STFT,digits=1,nsmall=2,width=2)))
 
 
 SD<-apply(paramSD[,-2],2,format,digits=1,nsmall=1,width=2,trim=FALSE)
 row.names(SD)<-n2[match(row.names(SD),n1)]
-
-
+SD<-SD[order(row.names(SD)),]
 print.htmlTable(htmlTable(SD))
 
 tabST<-cbind(as.data.frame(maST)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maST)),function(i){fix_formula(modelt[[i]])}))[,c(1,5,2,3,4)]
