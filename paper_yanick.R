@@ -192,10 +192,12 @@ i7<- (lmer(log(v$sd90)~  gen.mst+ nbvisdperso+ global + annee1+ julien+ (1|bague
 i8<- (lmer(log(v$sd90)~  nbviscomp+ annee1 + julien +(1|bague)+ (1|abreuv), REML=T, data=v2, na.action=na.omit))
 i9<- (lmer(log(v$sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=T, data=v2, na.action=na.omit))
 
+modeli<-list(i1=i1,i2=i2,i3=i3,i4=i4,i5=i5,i6=i6,i7=i7,i8=i8,i9=i9)
 ma<-model.avg(modeli)
 co<-t(ma$coefficients)
 ci<-confint(ma,full=TRUE)
 paramSD<-cbind(co,ci)
+paramSD<-paramSD[!duplicated(row.names(paramSD)),] #tiny bug in MuMIn with repeated values
 
 
 
@@ -413,6 +415,7 @@ ma<-model.avg(modelt)
 co<-t(ma$coefficients)
 ci<-confint(ma,full=TRUE)
 paramST<-cbind(co,ci)
+paramST<-paramST[!duplicated(row.names(paramST)),] #tiny bug in MuMIn with repeated values
 
 
 
@@ -518,6 +521,7 @@ ma<-model.avg(modelg)
 co<-t(ma$coefficients)
 ci<-confint(ma,full=TRUE)
 paramFT<-cbind(co,ci)
+paramFT<-paramFT[!duplicated(row.names(paramFT)),] #tiny bug in MuMIn with repeated values
 
 
 ### master data.frame
