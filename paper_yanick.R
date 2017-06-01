@@ -116,6 +116,7 @@ d<-read.table("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/Yanick
 #ET<-(d$var.intra.abreuv)^0.5
 sexe1<-as.factor(d$sexe)
 annee1<-as.factor(d$annee)
+d$trouee<-as.factor(d$trouee)
 d<-cbind(d,sexe1,annee1)#,ET)
 v<-subset(d, d$age==1) 
 v<-subset(v,v$annee==2007 | v$annee==2008 )
@@ -178,19 +179,35 @@ maSD<-aictab(modeli)
 # Il faut cr??r une liste appel?e "model" avec tout les mod?les
 #! ex: model<-c(model1,model2,model3,...)
 
-i1<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp + sexe1:fleur+ sexe1:julien + sexe1:nbviscomp+ pluie:temperature+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
-i2<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+ temperature + pluie + fleur + gen.mst + nbviscomp+  (1|bague) + (1|abreuv), REML=F, data=v2, na.action=na.omit))
-i3<- (lmer(log(v$sd90)~ sexe1 + masse+ parasites+ annee1+ julien+ nbvisdperso+  global+temperature + pluie + gen.mst + nbviscomp + sexe1:julien+pluie:temperature+(1|bague)+ (1|abreuv), REML=F , data=v2, na.action=na.omit))
-i4<- (lmer(log(v$sd90)~  sexe1 + masse + parasites+ annee1 + julien+ sexe1:julien + (1|bague)+ (1|abreuv) , data=v2, REML=F, na.action=na.omit))
-## avec variables abiotiques   Pas d interactions possible entre pluie et annee : false convergence
-i5<- (lmer(log(v$sd90) ~  temperature+ pluie+ temperature: pluie+  julien+  annee1 +(1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
-## avec variables du paysages
-i6<- (lmer(log(v$sd90) ~  fleur +annee1+ julien+ sexe1:fleur + sexe1:julien+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
-## avec variables rattachees aux mouvements et traplines
-i7<- (lmer(log(v$sd90)~  gen.mst+ nbvisdperso+ global + annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
-## avec variables reliees aux a la presence des competiteurs # pas d interaction avec annee ou julien possible false convergence
-i8<- (lmer(log(v$sd90)~  nbviscomp+ annee1 + julien +(1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
-i9<- (lmer(log(v$sd90)~ annee1+ julien+ (1|bague)+ (1|abreuv), REML=F, data=v2, na.action=na.omit))
+i1<-lmer(log(v$sd90)~sexe1+masse+parasites+annee1+julien+nbvisdperso+global+temperature+pluie+fleur+gen.mst+nbviscomp+sexe1:fleur+sexe1:julien+sexe1:nbviscomp+pluie:temperature+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+i2<-lmer(log(v$sd90)~sexe1+masse+parasites+annee1+julien+nbvisdperso+global+temperature+pluie+fleur+gen.mst+nbviscomp+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+i3<-lmer(log(v$sd90)~sexe1+masse+parasites+annee1+julien+nbvisdperso+global+temperature+pluie+gen.mst+nbviscomp+sexe1:julien+pluie:temperature+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+i4<-lmer(log(v$sd90)~sexe1+masse+parasites+annee1+julien+sexe1:julien+(1|bague)+(1|abreuv),data=v2,REML=F,na.action=na.omit)
+##avecvariablesabiotiquesPasdinteractionspossibleentrepluieetannee:falseconvergence
+i5<-lmer(log(v$sd90)~temperature+pluie+temperature:pluie+julien+annee1+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+##avecvariablesdupaysages
+i6<-lmer(log(v$sd90)~fleur+annee1+julien+sexe1:fleur+sexe1:julien+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+##avecvariablesrattacheesauxmouvementsettraplines
+i7<-lmer(log(v$sd90)~gen.mst+nbvisdperso+global+annee1+julien+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+##avecvariablesrelieesauxalapresencedescompetiteurs#pasdinteractionavecanneeoujulienpossiblefalseconvergence
+i8<-lmer(log(v$sd90)~nbviscomp+annee1+julien+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+i9<-lmer(log(v$sd90)~annee1+julien+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+
+### to correspond to FT and ST models
+i1<-lmer(log(v$sd90)~sexe1+masse+parasites+annee1+julien+nbvisdperso+global+temperature+pluie+trouee+arbre+gauli+fleur+gen.mst+nbviscomp+sexe1:trouee+sexe1:gauli+sexe1:arbre+sexe1:fleur+sexe1:julien+pluie:temperature+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+i2<-lmer(log(v$sd90)~sexe1+masse+parasites+annee1+julien+nbvisdperso+global++temperature+pluie+trouee+arbre+gauli+fleur+gen.mst+nbviscomp+sexe1:julien+pluie:temperature+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+i3<-lmer(log(v$sd90)~sexe1+masse+parasites+annee1+julien+nbvisdperso+global+temperature+pluie+gen.mst+nbviscomp+sexe1:julien+pluie:temperature+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+i4<-lmer(log(v$sd90)~sexe1+masse+parasites+annee1+julien+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+##avecvariablesabiotiquesPasdinteractionspossibleentrepluieetannee:falseconvergence
+i5<-lmer(log(v$sd90)~temperature+pluie+pluie:temperature+julien+annee1+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+##avecvariablesdupaysages
+i6<-lmer(log(v$sd90)~trouee+arbre+gauli+fleur+annee1+julien+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+##avecvariablesrattacheesauxmouvementsetlines(neconvergepasavecgen.mst)
+i7<-lmer(log(v$sd90)~nbvisdperso+annee1+julien+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+##avecvariablesrelieesauxalapresencedescompetiteurs#pasdinteractionavecanneeoujulienpossiblefalseconvergence
+i8<-lmer(log(v$sd90)~nbviscomp+annee1+julien+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+i9<-lmer(log(v$sd90)~annee1+julien+(1|bague)+(1|abreuv),REML=F,data=v2,na.action=na.omit)
+
 
 modeli<-list(i1=i1,i2=i2,i3=i3,i4=i4,i5=i5,i6=i6,i7=i7,i8=i8,i9=i9)
 ma<-model.avg(modeli)
@@ -213,19 +230,22 @@ newdat<-with(v2,data.frame(
 	masse=mean(masse),
 	parasites=mean(parasites),
 	annee1="2008",
+	trouee="1",
 	julien=mean(julien),
 	nbvisdperso=mean(nbvisdperso),
 	global=mean(global),
 	temperature=mean(temperature),
 	pluie=mean(pluie),
   fleur=mean(fleur),
+	gauli=mean(gauli),
+	arbre=mean(arbre),
 	gen.mst=mean(gen.mst),
 	nbviscomp=mean(nbviscomp)
 ))
 
 
 
-png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig5_scaled.png",width=6.5,height=5,units="in",res=500,pointsize=5)
+png("C:/Users/rouf1703/Documents/UdeS/Consultation/MBelisle/Doc/YanickPaper/Fig5_scaled_2.png",width=6.5,height=5,units="in",res=500,pointsize=5)
 
 par(mfrow=c(2,2),oma=c(0,0,0,0),mar=c(4.5,5.5,1,1))
 
@@ -366,6 +386,7 @@ subplot({
   par(mgp=c(3,1,0))
 },x=subplotlim()$x,y=subplotlim()$y,type="plt")
 
+
 dev.off()
 
 
@@ -401,7 +422,7 @@ t6<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  moy_pond_trouee_Trap + moy_pond_
 t7<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbvisdpersoMAX+ nbabreuvTrap+annee1+ julien+(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
 ## avec variables reliees aux a la presence des competiteurs # pas d interaction avec annee ou julien possible false convergence
 t8<- (glmer(cbind(v$nb0, v$long.dia - v$nb0) ~  nbviscompTrap+ annee1 + julien +(1|bague),data=v2, na.action=na.omit, family=binomial,control=controlglmer))
-t9<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ annee1+ julien+ (1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
+t9<- (glmer(cbind(v$nb0, v$long.dia - v$nb0)~ annee1+ julien+(1|bague),data=v2, na.action=na.omit,family=binomial,control=controlglmer))
 
 
 # Pour sortir des tableaux d AIC
@@ -423,7 +444,7 @@ paramST<-paramST[!duplicated(row.names(paramST)),] #tiny bug in MuMIn with repea
 newdat<-with(v2,data.frame(
   sexe1=4,
   masse=mean(masse),
-	 parasites=mean(parasites),
+	parasites=mean(parasites),
   annee1="2008",
   julien=mean(julien),
   nbvisdpersoMAX=mean(nbvisdpersoMAX),
@@ -649,9 +670,9 @@ row.names(SD)<-n2[match(row.names(SD),n1)]
 SD<-SD[order(row.names(SD)),]
 print.htmlTable(htmlTable(SD))
 
-tabST<-cbind(as.data.frame(maST)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maST)),function(i){fix_formula(modelt[[i]])}))[,c(1,5,2,3,4)]
-tabFT<-cbind(as.data.frame(maFT)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maFT)),function(i){fix_formula(modelg[[i]])}))[,c(1,5,2,3,4)]
-tabSD<-cbind(as.data.frame(maSD)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maSD)),function(i){fix_formula(modeli[[i]])}))[,c(1,5,2,3,4)]
+tabST<-cbind(as.data.frame(maST)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maST)),function(i){fix_formula(modelt[[i]])}),stringsAsFactors=FALSE)[,c(1,5,2,3,4)]
+tabFT<-cbind(as.data.frame(maFT)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maFT)),function(i){fix_formula(modelg[[i]])}),stringsAsFactors=FALSE)[,c(1,5,2,3,4)]
+tabSD<-cbind(as.data.frame(maSD)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maSD)),function(i){fix_formula(modeli[[i]])}),stringsAsFactors=FALSE)[,c(1,5,2,3,4)]
 
 tabST<-tabST[order(tabST$Modnames),]
 tabFT<-tabFT[order(tabFT$Modnames),]
@@ -662,7 +683,9 @@ print.htmlTable(htmlTable(dec(tabFT,col=4:5,digits=1,width=2,nsmall=2),rnames=FA
 print.htmlTable(htmlTable(dec(tabSD,col=4:5,digits=1,width=2,nsmall=2),rnames=FALSE))
 
 
+Map(setdiff,strsplit(tabSD$model," \\+ "),strsplit(tabFT$model," \\+ "))
 
-
-
+############################
+### Kriging ################
+############################
 
