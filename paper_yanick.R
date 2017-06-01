@@ -657,18 +657,22 @@ dec<-function(i,col=1:ncol(i),...){
 
 options(scipen=20)
 STFT<-as.data.frame(cbind(paramST[,-2],paramFT[,-2]))
-n1<-c("(Intercept)","sexe15","masse","parasites","annee12008","julien","nbvisdpersoMAX","temperature","pluie","nbabreuvTrap","moy_pond_trouee_Trap","moy_pond_arbre_Trap","moy_pond_gauli_Trap","moy_pond_fleur_Trap","gen.mst","nbviscompTrap","moy_pond_trouee_Trap:sexe15","moy_pond_gauli_Trap:sexe15","moy_pond_arbre_Trap:sexe15","moy_pond_fleur_Trap:sexe15","julien:sexe15","pluie:temperature","global","fleur","nbviscomp","nbvisdperso","fleur:sexe15","nbviscomp:sexe15")
-n2<-c("(Intercept)","Sex (female)","Body mass","Parasite load","Year (2008)","Julian date","Spatial concentration","Temperature","Rain","Number of feeders","Forest gap (occurence)","Tree density","Sapling density","Flower density","MST","Competition","Sex x Forest gap","Sex x Sapling density","Sex x Tree density","Sex x Flower density","Sex x Julian date","Temperature x Rain","FT","Flower density","Competition","Spatial concentration","Sex x Flower density","Sex x Competition")
+#cbind(row.names(paramST),row.names(paramFT),row.names(paramSD))
+n1<-c("(Intercept)","sexe15","masse","parasites","annee12008","julien","nbvisdpersoMAX","temperature","pluie","nbabreuvTrap","moy_pond_trouee_Trap","moy_pond_arbre_Trap","moy_pond_gauli_Trap","moy_pond_fleur_Trap","gen.mst","nbviscompTrap","moy_pond_trouee_Trap:sexe15","moy_pond_gauli_Trap:sexe15","moy_pond_arbre_Trap:sexe15","moy_pond_fleur_Trap:sexe15","julien:sexe15","pluie:temperature","global","fleur","nbviscomp","nbvisdperso","fleur:sexe15","nbviscomp:sexe15","trouee1","arbre","gauli","fleur","gen.mst","nbviscomp","sexe15:trouee1","gauli:sexe15","arbre:sexe15","fleur:sexe15")
+n2<-c("(Intercept)","Sex (female)","Body mass","Parasite load","Year (2008)","Julian date","Spatial concentration","Temperature","Rain","Number of feeders","Forest gap","Tree density","Sapling density","Flower density","MST","Competition","Sex x Forest gap","Sex x Sapling density","Sex x Tree density","Sex x Flower density","Sex x Julian date","Temperature x Rain","FT","Flower density","Competition","Spatial concentration","Sex x Flower density","Sex x Competition","Forest gap (occurence)","Tree density","Sapling density","Flower density","MST","Competition","Sex x Forest gap","Sex x Sapling density","Sex x Tree density","Sex x Flower density")
 row.names(STFT)<-n2[match(row.names(STFT),n1)]
 STFT<-STFT[-1,] #on enlève l'intercept
 STFT<-STFT[order(row.names(STFT)),]
 print.htmlTable(htmlTable(dec(STFT,digits=1,nsmall=2,width=2)))
 
-
 SD<-apply(paramSD[,-2],2,format,digits=1,nsmall=1,width=2,trim=FALSE)
 row.names(SD)<-n2[match(row.names(SD),n1)]
+SD<-SD[-1,] #on enlève l'intercept
 SD<-SD[order(row.names(SD)),]
 print.htmlTable(htmlTable(SD))
+
+#cbind(row.names(STFT),row.names(SD))
+## ce qui change entre les deux séries ce sont le FT et le nb d'abreuv
 
 tabST<-cbind(as.data.frame(maST)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maST)),function(i){fix_formula(modelt[[i]])}),stringsAsFactors=FALSE)[,c(1,5,2,3,4)]
 tabFT<-cbind(as.data.frame(maFT)[,c(1,2,4,6)],model=sapply(as.integer(row.names(maFT)),function(i){fix_formula(modelg[[i]])}),stringsAsFactors=FALSE)[,c(1,5,2,3,4)]
